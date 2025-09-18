@@ -10,11 +10,11 @@ public class DetalleVenta {
     public DetalleVenta() {
     }
 
-    public DetalleVenta(int idDetalle, Producto producto, int cantidad, double precioUnitario, double subtotal) {
-        this.idDetalle = idDetalle;
-        this.producto = producto;
+    public DetalleVenta(int cantidad, int idDetalle, double precioUnitario, Producto producto, double subtotal) {
         this.cantidad = cantidad;
+        this.idDetalle = idDetalle;
         this.precioUnitario = precioUnitario;
+        this.producto = producto;
         this.subtotal = subtotal;
     }
 
