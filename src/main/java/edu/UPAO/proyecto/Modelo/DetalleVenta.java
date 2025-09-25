@@ -2,59 +2,42 @@ package edu.UPAO.proyecto.Modelo;
 
 public class DetalleVenta {
     private int idDetalle;
-    private Producto producto;
     private int cantidad;
     private double precioUnitario;
-    private double subtotal;
+    private Producto producto;
 
-    public DetalleVenta() {
-    }
+    // Constructor vacío
+    public DetalleVenta() {}
 
-    public DetalleVenta(int idDetalle, Producto producto, int cantidad, double precioUnitario, double subtotal) {
+    // Constructor con subtotal calculado automáticamente
+    public DetalleVenta(int idDetalle, Producto producto, int cantidad, double precioUnitario) {
         this.idDetalle = idDetalle;
         this.producto = producto;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
-        this.subtotal = subtotal;
     }
 
-    public int getCantidad() {
-        return cantidad;
-    }
+    // Getters y Setters
+    public int getIdDetalle() { return idDetalle; }
+    public void setIdDetalle(int idDetalle) { this.idDetalle = idDetalle; }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 
-    public int getIdDetalle() {
-        return idDetalle;
-    }
+    public double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
 
-    public void setIdDetalle(int idDetalle) {
-        this.idDetalle = idDetalle;
-    }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
 
-    public double getPrecioUnitario() {
-        return precioUnitario;
-    }
-
-    public void setPrecioUnitario(double precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
-
-    public Producto getProducto() {
-        return producto;
-    }
-
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-    }
-
+    // Subtotal se calcula automáticamente
     public double getSubtotal() {
-        return subtotal;
+        return cantidad * precioUnitario;
     }
 
-    public void setSubtotal(double subtotal) {
-        this.subtotal = subtotal;
+    @Override
+    public String toString() {
+        return producto.getNombre() + " x" + cantidad + " | Precio: S/ " + precioUnitario + " | Subtotal: S/ " + getSubtotal();
     }
 }
+

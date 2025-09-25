@@ -49,13 +49,13 @@ public class Main {
             Producto prod = productoService.buscarPorId(idProd);
             if (prod != null && prod.getStock() >= cantidad) {
                 double subtotal = prod.getPrecioVenta() * cantidad;
-                DetalleVenta det = new DetalleVenta(detalles.size() + 1, prod, cantidad, prod.getPrecioVenta(), subtotal);
+                DetalleVenta det = new DetalleVenta(detalles.size() + 1, prod, cantidad, prod.getPrecioVenta());
                 detalles.add(det);
 
                 // Descontar stock en productoService
                 prod.setStock(prod.getStock() - cantidad);
 
-                System.out.println("Agregado: " + prod.getNombre() + " x" + cantidad + " | Subtotal: S/ " + subtotal);
+                System.out.println("Agregado: " + prod.getNombre() + " x" + cantidad + " | Subtotal: S/ " + det.getSubtotal());
 
                 // Verificar stock mínimo
                 productoService.verificarStockMinimo(prod.getIdProducto());
