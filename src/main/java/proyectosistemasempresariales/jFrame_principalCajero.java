@@ -539,8 +539,7 @@ public class jFrame_principalCajero extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        jFrame_añadirProducto Productos = new jFrame_añadirProducto();
-        Productos.setVisible(true);
+        
         
     }//GEN-LAST:event_jButton14ActionPerformed
 
