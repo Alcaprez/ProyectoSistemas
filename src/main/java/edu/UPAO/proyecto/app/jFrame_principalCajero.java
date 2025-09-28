@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package proyectosistemasempresariales;
+package edu.UPAO.proyecto.app;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -539,9 +539,7 @@ public class jFrame_principalCajero extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        jFrame_añadirProducto Productos = new jFrame_añadirProducto();
-        Productos.setVisible(true);
-        
+     
     }//GEN-LAST:event_jButton14ActionPerformed
 
     /**
