@@ -21,8 +21,13 @@ public class ListaProveedores extends javax.swing.JFrame {
         cargarProveedores();
     }
     private void configurarTabla() {
-        String[] columnas = {"ID", "Nombre", "RUC", "Teléfono", "Correo", "Estado"};
-        tableModel = new DefaultTableModel(columnas, 0); // 0 filas iniciales
+        String[] columnas = {"ID", "Nombre", "RUC","Estado"};
+        tableModel = new DefaultTableModel(columnas, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Ninguna celda será editable
+        }
+    }; // 0 filas iniciales
         jTable1.setModel(tableModel);
     }
     private void cargarProveedores() {
@@ -33,8 +38,6 @@ public class ListaProveedores extends javax.swing.JFrame {
                 p.getIdProveedor(),
                 p.getNombre(),
                 p.getRuc(),
-                p.getTelefono(),
-                p.getCorreo(),
                 p.isActivo() ? "Activo" : "Inactivo"
             });
         }
@@ -56,9 +59,9 @@ public class ListaProveedores extends javax.swing.JFrame {
         ACTUALIZAR = new javax.swing.JButton();
         ACTIVAR_DESACTIVAR = new javax.swing.JButton();
         HISTORIAL = new javax.swing.JButton();
-        DETALLES = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        DETALLES = new javax.swing.JButton();
 
         jPanel2.setBackground(new java.awt.Color(255, 153, 0));
 
@@ -132,7 +135,7 @@ public class ListaProveedores extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(771, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addContainerGap())
         );
@@ -196,10 +199,6 @@ public class ListaProveedores extends javax.swing.JFrame {
         HISTORIAL.setForeground(new java.awt.Color(255, 255, 255));
         HISTORIAL.setText("HISTORIAL");
 
-        DETALLES.setBackground(new java.awt.Color(51, 102, 0));
-        DETALLES.setForeground(new java.awt.Color(255, 255, 255));
-        DETALLES.setText("DETALLES");
-
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -213,22 +212,31 @@ public class ListaProveedores extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        DETALLES.setBackground(new java.awt.Color(51, 102, 0));
+        DETALLES.setForeground(new java.awt.Color(255, 255, 255));
+        DETALLES.setText("DETALLES");
+        DETALLES.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DETALLESActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(REGISTRAR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ACTUALIZAR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ACTIVAR_DESACTIVAR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(HISTORIAL, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DETALLES, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ACTIVAR_DESACTIVAR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ACTUALIZAR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(REGISTRAR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(HISTORIAL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(DETALLES, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 357, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(226, 226, 226))
         );
@@ -239,20 +247,17 @@ public class ListaProveedores extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
                         .addComponent(REGISTRAR, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(ACTUALIZAR, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(ACTIVAR_DESACTIVAR, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ACTIVAR_DESACTIVAR, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(HISTORIAL, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(DETALLES, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 104, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(DETALLES, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 65, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -286,12 +291,24 @@ public class ListaProveedores extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void REGISTRARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REGISTRARActionPerformed
-        // TODO add your handling code here:
+        Registrar_Proveedor ventana = new Registrar_Proveedor(this.proveedorService);
+        ventana.setLocationRelativeTo(this);
+        ventana.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            cargarProveedores(); // refresca la tabla
+        }
+    });
+        ventana.setVisible(true);
     }//GEN-LAST:event_REGISTRARActionPerformed
 
     private void ACTIVAR_DESACTIVARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACTIVAR_DESACTIVARActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ACTIVAR_DESACTIVARActionPerformed
+
+    private void DETALLESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DETALLESActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DETALLESActionPerformed
 
     /**
      * @param args the command line arguments
