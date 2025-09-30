@@ -34,6 +34,10 @@ public class ProveedorService {
                 .findFirst()
                 .orElse(null);
     }
+    // Buscar proveedor por RUC
+    public Proveedor buscarPorRuc(String ruc) {
+        return proveedorDAO.buscarPorRuc(ruc);
+    }
 
     // Registrar un nuevo proveedor (validando RUC duplicado y formato)
     public boolean registrarProveedor(Proveedor proveedor) {
@@ -53,29 +57,32 @@ public class ProveedorService {
     // Actualizar proveedor
     public boolean actualizarProveedorCampos(int id, String nombre, String ruc, String telefono,
             String correo, String direccion, String contactoPrincipal) {
-        Proveedor proveedor = proveedorDAO.buscarPorId(id);
-        if (proveedor == null) {
-            System.out.println("No se encontro un proveedor con ID: " + id);
-            return false;
-        }
-
         try {
-            proveedorDAO.actualizarCampos(id, nombre, ruc, telefono, correo, direccion, contactoPrincipal);
+            boolean actualizado = proveedorDAO.actualizarCampos(id, nombre, ruc, telefono, correo, direccion, contactoPrincipal);
+            if (!actualizado) {
+                System.out.println("No se encontró un proveedor con ID: " + id);
+                return false;
+            }
             System.out.println("Proveedor actualizado parcialmente (ID " + id + ")");
             return true;
         } catch (IllegalArgumentException e) {
-            System.out.println("Error al actualizar proveedor: " + e.getMessage());
+            System.out.println(" Error al actualizar proveedor: " + e.getMessage());
             return false;
         }
     }
 
     // Activar / Desactivar proveedor
-    public void activarDesactivarProveedor(int id) {
-        Proveedor p = proveedorDAO.buscarPorId(id);
-        if (p != null) {
-            proveedorDAO.cambiarEstado(id, !p.isActivo());
-            String estado = p.isActivo() ? "Activo" : "Inactivo";
-            System.out.println("Estado cambiado: " + p.getNombre() + " ahora esta " + estado);
-        }
+    // Cambiar estado explícitamente (por RUC)
+    public boolean cambiarEstadoProveedorPorRuc(String ruc, boolean activo, String motivo) {
+    Proveedor p = proveedorDAO.buscarPorRuc(ruc);
+    if (p != null) {
+        p.setActivo(activo);
+        // Aquí registrarías el motivo si decides llevar un historial
+        System.out.println("Estado cambiado para proveedor RUC " + ruc + " → " 
+                           + (activo ? "Activo" : "Inactivo") 
+                           + ". Motivo: " + motivo);
+        return true;
+    }
+    return false;
     }
 }

@@ -2,6 +2,7 @@
 package edu.UPAO.proyecto.app;
 import edu.UPAO.proyecto.Modelo.Proveedor;
 import edu.UPAO.proyecto.Service.ProveedorService;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -185,6 +186,11 @@ public class ListaProveedores extends javax.swing.JFrame {
         ACTUALIZAR.setBackground(new java.awt.Color(51, 102, 0));
         ACTUALIZAR.setForeground(new java.awt.Color(255, 255, 255));
         ACTUALIZAR.setText("ACTUALIZAR");
+        ACTUALIZAR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ACTUALIZARActionPerformed(evt);
+            }
+        });
 
         ACTIVAR_DESACTIVAR.setBackground(new java.awt.Color(51, 102, 0));
         ACTIVAR_DESACTIVAR.setForeground(new java.awt.Color(255, 255, 255));
@@ -309,6 +315,31 @@ public class ListaProveedores extends javax.swing.JFrame {
     private void DETALLESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DETALLESActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_DETALLESActionPerformed
+
+    private void ACTUALIZARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACTUALIZARActionPerformed
+    int fila = jTable1.getSelectedRow();
+    if (fila >= 0) {
+        int id = (int) jTable1.getValueAt(fila, 0); // ID de la primera columna
+        Proveedor seleccionado = proveedorService.buscarPorId(id);
+
+        if (seleccionado != null) {
+            Actualizar_Proveedor ventana = new Actualizar_Proveedor(proveedorService, seleccionado);
+            ventana.setLocationRelativeTo(this);
+            
+            // Refrescar la tabla al cerrar la ventana de actualización
+            ventana.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    cargarProveedores();
+                }
+            });
+            
+            ventana.setVisible(true);
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Seleccione un proveedor de la tabla.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    }
+    }//GEN-LAST:event_ACTUALIZARActionPerformed
 
     /**
      * @param args the command line arguments

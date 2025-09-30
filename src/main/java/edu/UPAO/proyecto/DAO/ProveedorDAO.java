@@ -41,35 +41,28 @@ public class ProveedorDAO {
                 .orElse(null);
     }
 
-    public void actualizarCampos(int id, String nombre, String ruc, String telefono, String correo,
-            String direccion, String contactoPrincipal) {
-        Proveedor proveedor = buscarPorId(id);
-        if (proveedor != null) {
-            if (nombre != null && !nombre.isBlank()) {
-                proveedor.setNombre(nombre);
-            }
-            if (ruc != null && !ruc.isBlank()) {
-                // Validar que no exista otro proveedor con ese mismo RUC
-                Proveedor existente = buscarPorRuc(ruc);
-                if (existente != null && existente.getIdProveedor() != id) {
-                    throw new IllegalArgumentException("Ya existe otro proveedor con el RUC: " + ruc);
-                }
-                proveedor.setRuc(ruc);
-            }
-            if (telefono != null && !telefono.isBlank()) {
-                proveedor.setTelefono(telefono);
-            }
-            if (correo != null && !correo.isBlank()) {
-                proveedor.setCorreo(correo);
-            }
-            if (direccion != null && !direccion.isBlank()) {
-                proveedor.setDireccion(direccion);
-            }
-            if (contactoPrincipal != null && !contactoPrincipal.isBlank()) {
-                proveedor.setContactoPrincipal(contactoPrincipal);
-            }
-        }
+    public boolean actualizarCampos(int id, String nombre, String ruc, String telefono, String correo,
+        String direccion, String contactoPrincipal) {
+    Proveedor proveedor = buscarPorId(id);
+    if (proveedor == null) {
+        return false;
     }
+
+    if (nombre != null && !nombre.isBlank()) proveedor.setNombre(nombre);
+    if (ruc != null && !ruc.isBlank()) {
+        Proveedor existente = buscarPorRuc(ruc);
+        if (existente != null && existente.getIdProveedor() != id) {
+            throw new IllegalArgumentException("Ya existe otro proveedor con el RUC: " + ruc);
+        }
+        proveedor.setRuc(ruc);
+    }
+    if (telefono != null && !telefono.isBlank()) proveedor.setTelefono(telefono);
+    if (correo != null && !correo.isBlank()) proveedor.setCorreo(correo);
+    if (direccion != null && !direccion.isBlank()) proveedor.setDireccion(direccion);
+    if (contactoPrincipal != null && !contactoPrincipal.isBlank()) proveedor.setContactoPrincipal(contactoPrincipal);
+
+    return true;
+}
 
     // Cambiar estado explícitamente
     public void cambiarEstado(int id, boolean activo) {
