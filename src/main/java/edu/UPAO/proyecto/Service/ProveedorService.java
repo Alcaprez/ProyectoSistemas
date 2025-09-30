@@ -1,13 +1,15 @@
 package edu.UPAO.proyecto.Service;
 
 import edu.UPAO.proyecto.DAO.ProveedorDAO;
+import edu.UPAO.proyecto.Modelo.HistorialProveedor;
 import edu.UPAO.proyecto.Modelo.Proveedor;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProveedorService {
 
     private ProveedorDAO proveedorDAO = new ProveedorDAO();
-
+    private final List<HistorialProveedor> historial = new ArrayList<>();
     public ProveedorService() {
         // Datos de prueba (ID se asigna automático en el DAO)
         registrarProveedor(new Proveedor("Distribuidora Norte SAC", "20123456789", "Calle A 123", "044-123456", "contacto@nortesac.com", "Carlos Díaz", true));
@@ -16,7 +18,14 @@ public class ProveedorService {
         registrarProveedor(new Proveedor("TecnoGlobal Importaciones", "20111222334", "Av. D 101", "01-7654321", "info@tecnoglobal.pe", "Ana Torres", true));
         registrarProveedor(new Proveedor("AgroExport Trujillo", "20678912345", "Calle E 202", "044-987654", "ventas@agroexporttrujillo.com", "Luis Gómez", true));
     }
-
+    public List<HistorialProveedor> obtenerHistorialPorProveedor(int idProveedor) {
+    return historial.stream()
+            .filter(h -> h.getIdProveedor() == idProveedor)
+            .toList();
+    }
+    public List<HistorialProveedor> obtenerHistorialCompleto() {
+    return new ArrayList<>(historial);
+    }
     // Listar proveedores
     public List<Proveedor> listarProveedores() {
         return proveedorDAO.listar();
@@ -70,14 +79,19 @@ public class ProveedorService {
             return false;
         }
     }
-
-    // Activar / Desactivar proveedor
+    private void registrarEventoHistorial(int idProveedor, String tipoEvento, String detalle) {
+    historial.add(new HistorialProveedor(idProveedor, tipoEvento, detalle));
+    System.out.println("Historial registrado → " + tipoEvento + " | " + detalle);
+    }
     // Cambiar estado explícitamente (por RUC)
     public boolean cambiarEstadoProveedorPorRuc(String ruc, boolean activo, String motivo) {
     Proveedor p = proveedorDAO.buscarPorRuc(ruc);
     if (p != null) {
         p.setActivo(activo);
-        // Aquí registrarías el motivo si decides llevar un historial
+        // Registrar evento en historial
+        String tipoEvento = activo ? "ACTIVACION" : "DESACTIVACION";
+        registrarEventoHistorial(p.getIdProveedor(), tipoEvento, motivo);
+
         System.out.println("Estado cambiado para proveedor RUC " + ruc + " → " 
                            + (activo ? "Activo" : "Inactivo") 
                            + ". Motivo: " + motivo);

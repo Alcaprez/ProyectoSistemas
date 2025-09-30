@@ -22,9 +22,26 @@ public class ActivarDesactivar_Proveedor extends javax.swing.JFrame {
      */
     public ActivarDesactivar_Proveedor(ProveedorService proveedorService) {
         this.proveedorService = proveedorService;
+        initComponents();
         buttonGroup2.add(jRadioButton1);
         buttonGroup2.add(jRadioButton2);
-        initComponents();
+        jTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
+    @Override
+    public void focusLost(java.awt.event.FocusEvent evt) {
+        String ruc = jTextField2.getText().trim();
+        if (!ruc.isEmpty()) {
+            Proveedor proveedor = proveedorService.buscarPorRuc(ruc);
+            if (proveedor != null) {
+                jTextField1.setText(proveedor.getNombre());
+            } else {
+                jTextField1.setText("");
+                JOptionPane.showMessageDialog(null, 
+                    "No se encontró proveedor con RUC: " + ruc,
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    });
     }
 
     /**
@@ -129,6 +146,7 @@ public class ActivarDesactivar_Proveedor extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Nombre:");
 
+        jTextField1.setEditable(false);
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -283,8 +301,14 @@ public class ActivarDesactivar_Proveedor extends javax.swing.JFrame {
         String ruc = jTextField2.getText().trim();
         String motivo = jTextField3.getText().trim();
 
+        // Validaciones
         if (ruc.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe ingresar el RUC.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (motivo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar un motivo.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -293,16 +317,17 @@ public class ActivarDesactivar_Proveedor extends javax.swing.JFrame {
             return;
         }
 
-        boolean activar = jRadioButton1.isSelected(); // true = Activar, false = Desactivar
-
         // Buscar proveedor
         Proveedor proveedor = proveedorService.buscarPorRuc(ruc);
         if (proveedor == null) {
             JOptionPane.showMessageDialog(this, "No se encontró proveedor con RUC: " + ruc, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        // Determinar acción
+        boolean activar = jRadioButton1.isSelected(); // true = Activar, false = Desactivar
 
-        // Cambiar estado
+        // Cambiar estado y registrar historial
         boolean exito = proveedorService.cambiarEstadoProveedorPorRuc(proveedor.getRuc(), activar, motivo);
         if (exito) {
             JOptionPane.showMessageDialog(this,

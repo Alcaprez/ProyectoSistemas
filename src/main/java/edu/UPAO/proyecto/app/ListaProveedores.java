@@ -309,7 +309,19 @@ public class ListaProveedores extends javax.swing.JFrame {
     }//GEN-LAST:event_REGISTRARActionPerformed
 
     private void ACTIVAR_DESACTIVARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACTIVAR_DESACTIVARActionPerformed
-        // TODO add your handling code here:
+       ActivarDesactivar_Proveedor ventana = new ActivarDesactivar_Proveedor(proveedorService);
+    ventana.setLocationRelativeTo(this);
+
+    // Refrescar tabla al cerrar
+    ventana.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            cargarProveedores();
+        }
+    });
+
+    ventana.setVisible(true);
+    // TODO add your handling code here:
     }//GEN-LAST:event_ACTIVAR_DESACTIVARActionPerformed
 
     private void DETALLESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DETALLESActionPerformed
