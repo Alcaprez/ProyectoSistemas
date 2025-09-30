@@ -10,6 +10,8 @@ public class NewJFrame extends javax.swing.JFrame {
         initComponents();
         
         Content.add(new pag1(), "pag1");
+        Content.add(new pag2(), "pag2");
+        Content.add(new pag3(), "pag3");
         
         CardLayout cl = (CardLayout) Content.getLayout();
         cl.show(Content, "pag1");
@@ -26,8 +28,7 @@ public class NewJFrame extends javax.swing.JFrame {
         pag7CerrarSecion = new javax.swing.JButton();
         pag1Inventario = new javax.swing.JButton();
         pag2Devolucion = new javax.swing.JButton();
-        pag3Reportes = new javax.swing.JButton();
-        pag4Usuarios = new javax.swing.JButton();
+        pag3Usuarios = new javax.swing.JButton();
         pag5Proveedores = new javax.swing.JButton();
         pag6Configuracion = new javax.swing.JButton();
         Content = new javax.swing.JPanel();
@@ -63,19 +64,11 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
-        pag3Reportes.setFont(new java.awt.Font("Segoe UI", 0, 8)); // NOI18N
-        pag3Reportes.setText("Reportes");
-        pag3Reportes.addActionListener(new java.awt.event.ActionListener() {
+        pag3Usuarios.setFont(new java.awt.Font("Segoe UI", 0, 8)); // NOI18N
+        pag3Usuarios.setText("Permisos Usuarios");
+        pag3Usuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pag3ReportesActionPerformed(evt);
-            }
-        });
-
-        pag4Usuarios.setFont(new java.awt.Font("Segoe UI", 0, 8)); // NOI18N
-        pag4Usuarios.setText("Usuarios");
-        pag4Usuarios.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pag4UsuariosActionPerformed(evt);
+                pag3UsuariosActionPerformed(evt);
             }
         });
 
@@ -104,49 +97,47 @@ public class NewJFrame extends javax.swing.JFrame {
         paneladm.setLayout(paneladmLayout);
         paneladmLayout.setHorizontalGroup(
             paneladmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paneladmLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneladmLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(paneladmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pag5Proveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pag4Usuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pag3Reportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pag3Usuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pag2Devolucion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pag6Configuracion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pag1Inventario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(Content, javax.swing.GroupLayout.PREFERRED_SIZE, 858, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(paneladmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(paneladmLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pag7CerrarSecion, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Content, javax.swing.GroupLayout.PREFERRED_SIZE, 858, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(54, 54, 54))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneladmLayout.createSequentialGroup()
-                .addGap(127, 127, 127)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pag7CerrarSecion, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(106, 106, 106))
         );
         paneladmLayout.setVerticalGroup(
             paneladmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, paneladmLayout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addComponent(pag1Inventario, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pag2Devolucion, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pag3Reportes, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(pag4Usuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(pag5Proveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pag6Configuracion, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(paneladmLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(paneladmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pag7CerrarSecion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Content, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36))
+                    .addGroup(paneladmLayout.createSequentialGroup()
+                        .addGap(126, 126, 126)
+                        .addComponent(pag1Inventario, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pag2Devolucion, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pag3Usuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(pag5Proveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pag6Configuracion, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 260, Short.MAX_VALUE))
+                    .addGroup(paneladmLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(paneladmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pag7CerrarSecion, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Content, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -157,7 +148,7 @@ public class NewJFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(paneladm, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(paneladm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -173,15 +164,10 @@ public class NewJFrame extends javax.swing.JFrame {
         cl.show(Content, "pag2");
     }//GEN-LAST:event_pag2DevolucionActionPerformed
 
-    private void pag3ReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pag3ReportesActionPerformed
+    private void pag3UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pag3UsuariosActionPerformed
         CardLayout cl = (CardLayout) Content.getLayout();
         cl.show(Content, "pag3");
-    }//GEN-LAST:event_pag3ReportesActionPerformed
-
-    private void pag4UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pag4UsuariosActionPerformed
-        CardLayout cl = (CardLayout) Content.getLayout();
-        cl.show(Content, "pag4");
-    }//GEN-LAST:event_pag4UsuariosActionPerformed
+    }//GEN-LAST:event_pag3UsuariosActionPerformed
 
     private void pag5ProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pag5ProveedoresActionPerformed
         CardLayout cl = (CardLayout) Content.getLayout();
@@ -237,8 +223,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton pag1Inventario;
     private javax.swing.JButton pag2Devolucion;
-    private javax.swing.JButton pag3Reportes;
-    private javax.swing.JButton pag4Usuarios;
+    private javax.swing.JButton pag3Usuarios;
     private javax.swing.JButton pag5Proveedores;
     private javax.swing.JButton pag6Configuracion;
     private javax.swing.JButton pag7CerrarSecion;
