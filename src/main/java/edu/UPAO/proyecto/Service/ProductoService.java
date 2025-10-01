@@ -46,11 +46,7 @@ public class ProductoService {
         if (!Validaciones.isPositiveNumber(p.getPrecioVenta())) {
             errores.add("Precio de venta debe ser mayor que 0.");
         }
-
-        if (!Validaciones.isPositiveNumber(p.getPrecioCompra())) {
-            errores.add("Precio de compra debe ser mayor que 0.");
-        }
-
+        
         if (!Validaciones.isNonNegativeInt(p.getStock())) {
             errores.add("Stock no puede ser negativo.");
         }

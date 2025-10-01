@@ -557,7 +557,7 @@ public class ModuloInventario extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
 
-        jPanel1.setBackground(new java.awt.Color(255, 133, 58));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 204));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 

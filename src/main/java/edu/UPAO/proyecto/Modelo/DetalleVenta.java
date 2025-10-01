@@ -1,25 +1,30 @@
 package edu.UPAO.proyecto.Modelo;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class DetalleVenta {
-    private int idDetalle;
-    private int cantidad;
-    private double precioUnitario;
-    private Producto producto;
+    private Producto producto;     // Producto vendido
+    private int cantidad;          // Cantidad vendida
+    private double precioUnitario; // Precio unitario (puede ser producto.getPrecioVenta())
+    private LocalDateTime fecha;   // Fecha y hora de la venta
 
     // Constructor vacío
-    public DetalleVenta() {}
+    public DetalleVenta() {
+        this.fecha = LocalDateTime.now();
+    }
 
-    // Constructor con subtotal calculado automáticamente
-    public DetalleVenta(int idDetalle, Producto producto, int cantidad, double precioUnitario) {
-        this.idDetalle = idDetalle;
+    // Constructor para una línea de venta
+    public DetalleVenta(Producto producto, int cantidad, double precioUnitario) {
         this.producto = producto;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
+        this.fecha = LocalDateTime.now();
     }
 
-    // Getters y Setters
-    public int getIdDetalle() { return idDetalle; }
-    public void setIdDetalle(int idDetalle) { this.idDetalle = idDetalle; }
+    // Getters y setters
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
 
     public int getCantidad() { return cantidad; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
@@ -27,17 +32,36 @@ public class DetalleVenta {
     public double getPrecioUnitario() { return precioUnitario; }
     public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
 
-    public Producto getProducto() { return producto; }
-    public void setProducto(Producto producto) { this.producto = producto; }
+    public LocalDateTime getFecha() { return fecha; }
+    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 
-    // Subtotal se calcula automáticamente
+    // Subtotal de esta línea
     public double getSubtotal() {
         return cantidad * precioUnitario;
     }
 
+    // Formato bonito de fecha
+    public String getFechaFormateada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return fecha.format(formatter);
+    }
+
+    // Convertir línea a string para mostrar
     @Override
     public String toString() {
-        return producto.getNombre() + " x" + cantidad + " | Precio: S/ " + precioUnitario + " | Subtotal: S/ " + getSubtotal();
+        return producto.getNombre() + " x" + cantidad +
+               " | Precio: S/ " + precioUnitario +
+               " | Subtotal: S/ " + getSubtotal();
+    }
+
+    // Convertir línea a archivo (fecha;producto;cantidad;precioUnitario;subtotal)
+    public String toFileLine() {
+        return getFechaFormateada() + ";" +
+               producto.getCodigo() + ";" +
+               producto.getNombre() + ";" +
+               cantidad + ";" +
+               String.format("%.2f", precioUnitario) + ";" +
+               String.format("%.2f", getSubtotal());
     }
 }
 

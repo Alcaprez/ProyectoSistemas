@@ -8,13 +8,19 @@ public class ProductoDAO {
     private static List<Producto> productos = new ArrayList<>();
 
     static {
-        // Datos iniciales simulando una BD
-        productos.add(new Producto("Bebidas", "B001", "2025-01-01", "2026-01-01",
-                1, "Gaseosa Inca Kola 500ml", 2.00, 3.50, 20, 5));
-        productos.add(new Producto("Snacks", "S001", "2025-01-01", "2025-06-01",
-                2, "Galletas Oreo", 1.20, 2.00, 50, 10));
-        productos.add(new Producto("Higiene", "H001", "2025-02-15", "2026-02-15",
-                3, "Shampoo Sedal 200ml", 5.00, 7.50, 15, 3));
+         // Datos iniciales simulando una BD
+        productos.add(new Producto(
+                1, "B001", "Gaseosa Inca Kola 500ml", "Bebidas",
+                3.50, 20, 5, 0, "2025-01-01", "2026-01-01"
+        ));
+        productos.add(new Producto(
+                2, "S001", "Galletas Oreo", "Snacks",
+                2.00, 50, 10, 0, "2025-01-01", "2025-06-01"
+        ));
+        productos.add(new Producto(
+                3, "H001", "Shampoo Sedal 200ml", "Higiene",
+                7.50, 15, 3, 0, "2025-02-15", "2026-02-15"
+        ));   
     }
 
     // Listar todos los productos
@@ -61,5 +67,9 @@ public class ProductoDAO {
     public boolean estaBajoStock(int id) {
         Producto p = buscarPorId(id);
         return p != null && p.getStock() <= p.getStockMinimo();
+    }
+    public List<Producto> productosMasVendidos() {
+        productos.sort((a, b) -> Integer.compare(b.getVendidos(), a.getVendidos()));
+        return productos;
     }
 }

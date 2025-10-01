@@ -161,7 +161,7 @@ public class HistorialDevoluciones extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaDevoluciones = new javax.swing.JTable();
 
-        jPanel1.setBackground(new java.awt.Color(255, 130, 58));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 204));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("Historial de Devoluciones");

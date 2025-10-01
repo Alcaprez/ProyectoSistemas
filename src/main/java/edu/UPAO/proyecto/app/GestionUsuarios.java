@@ -384,7 +384,7 @@ public class GestionUsuarios extends javax.swing.JPanel {
         jScrollPane4 = new javax.swing.JScrollPane();
         tablaLogs = new javax.swing.JTable();
 
-        jPanel1.setBackground(new java.awt.Color(255, 130, 58));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 204));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 

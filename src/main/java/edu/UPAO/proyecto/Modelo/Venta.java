@@ -43,7 +43,7 @@ public class Venta {
     public List<DetalleVenta> getDetalleVenta() { return detalleVenta; }
     public void setDetalleVenta(List<DetalleVenta> detalleVenta) { this.detalleVenta = detalleVenta; }
 
-    // ✅ Calcular total automáticamente
+    // ✅ Calcular total automáticamente sumando subtotales de detalleVenta
     public double calcularTotal() {
         return detalleVenta.stream()
                 .mapToDouble(DetalleVenta::getSubtotal)
@@ -56,7 +56,7 @@ public class Venta {
         return fecha.format(formatter);
     }
 
-    // ✅ Agregar un producto al detalle
+    // ✅ Agregar un detalle de venta
     public void agregarDetalle(DetalleVenta detalle) {
         if (this.detalleVenta == null) {
             this.detalleVenta = new ArrayList<>();
@@ -64,19 +64,41 @@ public class Venta {
         this.detalleVenta.add(detalle);
     }
 
+    // ✅ Convertir la venta completa a línea de archivo
+    public String toFileLine() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getFechaFormateada()).append(";")
+          .append(idVenta).append(";")
+          .append(cajeroId).append(";")
+          .append(metodoPago).append(";")
+          .append(String.format("%.2f", calcularTotal())).append(";");
+
+        for (int i = 0; i < detalleVenta.size(); i++) {
+            if (i > 0) sb.append(",");
+            sb.append(detalleVenta.get(i).toFileLine());
+        }
+
+        return sb.toString();
+    }
+
+    // ✅ Representación amigable de la venta
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("=== BOLETA DE VENTA ===\n");
-        sb.append("Venta ID: ").append(idVenta).append("\n");
-        sb.append("Fecha: ").append(getFechaFormateada()).append("\n");
-        sb.append("Método de pago: ").append(metodoPago).append("\n\n");
-        sb.append("Detalle:\n");
+        sb.append("=== BOLETA DE VENTA ===\n")
+          .append("Venta ID: ").append(idVenta).append("\n")
+          .append("Fecha: ").append(getFechaFormateada()).append("\n")
+          .append("Cajero ID: ").append(cajeroId).append("\n")
+          .append("Método de pago: ").append(metodoPago).append("\n\n")
+          .append("Detalle:\n");
+
         for (DetalleVenta d : detalleVenta) {
             sb.append(d.toString()).append("\n");
         }
-        sb.append("\nTOTAL: S/ ").append(calcularTotal()).append("\n");
-        sb.append("=======================\n");
+
+        sb.append("\nTOTAL: S/ ").append(calcularTotal()).append("\n")
+          .append("=======================\n");
+
         return sb.toString();
     }
 }

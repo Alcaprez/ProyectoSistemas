@@ -330,15 +330,9 @@ public class ListaProveedores extends javax.swing.JFrame {
     }//GEN-LAST:event_ACTIVAR_DESACTIVARActionPerformed
 
     private void DETALLESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DETALLESActionPerformed
-       int fila = jTable1.getSelectedRow();
-    if (fila >= 0) {
-        int id = (int) jTable1.getValueAt(fila, 0); 
-        Detalles_Proveedores ventana = new Detalles_Proveedores(proveedorService, id);
-        ventana.setLocationRelativeTo(this);
-        ventana.setVisible(true);
-    } else {
-        JOptionPane.showMessageDialog(this, "Seleccione un proveedor de la tabla.", "Aviso", JOptionPane.WARNING_MESSAGE);
-    } // TODO add your handling code here:
+    Detalles_Proveedores ventana = new Detalles_Proveedores(proveedorService, -1); 
+    ventana.setLocationRelativeTo(this);
+    ventana.setVisible(true);// TODO add your handling code here:
     }//GEN-LAST:event_DETALLESActionPerformed
 
     private void ACTUALIZARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACTUALIZARActionPerformed
@@ -387,10 +381,6 @@ public class ListaProveedores extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new ListaProveedores().setVisible(true));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ACTIVAR_DESACTIVAR;
     private javax.swing.JButton ACTUALIZAR;
