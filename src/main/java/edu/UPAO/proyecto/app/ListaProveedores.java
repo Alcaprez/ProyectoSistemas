@@ -330,7 +330,15 @@ public class ListaProveedores extends javax.swing.JFrame {
     }//GEN-LAST:event_ACTIVAR_DESACTIVARActionPerformed
 
     private void DETALLESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DETALLESActionPerformed
-        // TODO add your handling code here:
+       int fila = jTable1.getSelectedRow();
+    if (fila >= 0) {
+        int id = (int) jTable1.getValueAt(fila, 0); 
+        Detalles_Proveedores ventana = new Detalles_Proveedores(proveedorService, id);
+        ventana.setLocationRelativeTo(this);
+        ventana.setVisible(true);
+    } else {
+        JOptionPane.showMessageDialog(this, "Seleccione un proveedor de la tabla.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    } // TODO add your handling code here:
     }//GEN-LAST:event_DETALLESActionPerformed
 
     private void ACTUALIZARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACTUALIZARActionPerformed
