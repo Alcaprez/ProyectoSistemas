@@ -13,6 +13,8 @@ import edu.UPAO.proyecto.Service.DashboardVentasService;
 import edu.UPAO.proyecto.Service.ProductoService;
 import edu.UPAO.proyecto.Modelo.Producto;
 import edu.UPAO.proyecto.DAO.*;
+import edu.UPAO.proyecto.Modelo.PuntoDiario;
+import edu.UPAO.proyecto.Modelo.PuntoMensual;
 import java.util.List;
 
 public class VENTAS extends javax.swing.JFrame {

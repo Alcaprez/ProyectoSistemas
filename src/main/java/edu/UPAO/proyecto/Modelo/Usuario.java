@@ -1,77 +1,77 @@
 package edu.UPAO.proyecto.Modelo;
+import java.time.LocalTime;
 
 public class Usuario {
-    private int IdUsuario;
-    private String NombreComp;
-    private String Usuario;
-    private String Contrasena;
-    private String Rol;
-    private int DNI;
-    private boolean Estado;
 
-    public Usuario(String contrasena, int DNI, boolean estado, int idUsuario, String nombreComp, String rol, String usuario) {
-        Contrasena = contrasena;
-        this.DNI = DNI;
-        Estado = estado;
-        IdUsuario = idUsuario;
-        NombreComp = nombreComp;
-        Rol = rol;
-        Usuario = usuario;
+    private String id;
+    private String nombreComp;
+    private String cargo;
+    private String tienda;
+    private LocalTime horaEntradaProg;
+    private LocalTime horaSalidaProg;
+
+    // --- Constructores ---
+    public Usuario(String id, String nombreComp, String cargo, String tienda,
+                   LocalTime horaEntradaProg, LocalTime horaSalidaProg) {
+        this.id = id;
+        this.nombreComp = nombreComp;
+        this.cargo = cargo;
+        this.tienda = tienda;
+        this.horaEntradaProg = horaEntradaProg;
+        this.horaSalidaProg = horaSalidaProg;
     }
 
-    public String getContrasena() {
-        return Contrasena;
+    // --- Getters & Setters ---
+    public String getId() {
+        return id;
     }
 
-    public void setContrasena(String contrasena) {
-        Contrasena = contrasena;
-    }
-
-    public int getDNI() {
-        return DNI;
-    }
-
-    public void setDNI(int DNI) {
-        this.DNI = DNI;
-    }
-
-    public boolean isEstado() {
-        return Estado;
-    }
-
-    public void setEstado(boolean estado) {
-        Estado = estado;
-    }
-
-    public int getIdUsuario() {
-        return IdUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        IdUsuario = idUsuario;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNombreComp() {
-        return NombreComp;
+        return nombreComp;
     }
 
     public void setNombreComp(String nombreComp) {
-        NombreComp = nombreComp;
+        this.nombreComp = nombreComp;
     }
 
-    public String getRol() {
-        return Rol;
+    public String getCargo() {
+        return cargo;
     }
 
-    public void setRol(String rol) {
-        Rol = rol;
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 
-    public String getUsuario() {
-        return Usuario;
+    public String getTienda() {
+        return tienda;
     }
 
-    public void setUsuario(String usuario) {
-        Usuario = usuario;
+    public void setTienda(String tienda) {
+        this.tienda = tienda;
+    }
+
+    public LocalTime getHoraEntradaProg() {
+        return horaEntradaProg;
+    }
+
+    public void setHoraEntradaProg(LocalTime horaEntradaProg) {
+        this.horaEntradaProg = horaEntradaProg;
+    }
+
+    public LocalTime getHoraSalidaProg() {
+        return horaSalidaProg;
+    }
+
+    public void setHoraSalidaProg(LocalTime horaSalidaProg) {
+        this.horaSalidaProg = horaSalidaProg;
+    }
+
+    @Override
+    public String toString() {
+        return nombreComp + " (" + cargo + ") - " + tienda;
     }
 }

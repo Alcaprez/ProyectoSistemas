@@ -8,11 +8,11 @@ public class UsuarioDAO {
     private static List<Usuario> usuarios = new ArrayList<>();
 
     static {
-        // Datos iniciales simulando usuarios registrados
-        usuarios.add(new Usuario("1234", 12345678, true, 1, "Juan Pérez", "CAJERO", "cajero1"));
-        usuarios.add(new Usuario("admin", 87654321, true, 2, "María López", "ADMIN", "admin1"));
-        usuarios.add(new Usuario("0000", 11112222, false, 3, "Carlos Ruiz", "CAJERO", "cajero2")); // este está desactivado
+    usuarios.add(new Usuario(1, 12345678, true, 1, "Juan Pérez", "CAJERO", "cajero1", "1234"));
+    usuarios.add(new Usuario(2, 87654321, true, 2, "María López", "ADMIN", "admin1", "admin"));
+    usuarios.add(new Usuario(3, 11112222, false, 3, "Carlos Ruiz", "CAJERO", "cajero2", "0000")); 
     }
+
 
     // Listar todos los usuarios
     public List<Usuario> listar() {
