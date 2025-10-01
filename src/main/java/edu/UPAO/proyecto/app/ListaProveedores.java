@@ -204,6 +204,11 @@ public class ListaProveedores extends javax.swing.JFrame {
         HISTORIAL.setBackground(new java.awt.Color(51, 102, 0));
         HISTORIAL.setForeground(new java.awt.Color(255, 255, 255));
         HISTORIAL.setText("HISTORIAL");
+        HISTORIAL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HISTORIALActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -263,7 +268,7 @@ public class ListaProveedores extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(DETALLES, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 65, Short.MAX_VALUE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -352,6 +357,24 @@ public class ListaProveedores extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Seleccione un proveedor de la tabla.", "Aviso", JOptionPane.WARNING_MESSAGE);
     }
     }//GEN-LAST:event_ACTUALIZARActionPerformed
+
+    private void HISTORIALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HISTORIALActionPerformed
+     int fila = jTable1.getSelectedRow(); // asumiendo que tu tabla de proveedores se llama jTableProveedores
+    if (fila == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Seleccione un proveedor primero.", 
+            "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Supongamos que en la primera columna de la tabla tienes el ID del proveedor
+    int idProveedor = (int) jTable1.getValueAt(fila, 0);
+
+    // Crear la ventana de historial y mostrarla
+    Historial_Proveedor ventanaHistorial = new Historial_Proveedor(proveedorService, idProveedor);
+    ventanaHistorial.setLocationRelativeTo(this);
+    ventanaHistorial.setVisible(true);   // TODO add your handling code here:
+    }//GEN-LAST:event_HISTORIALActionPerformed
 
     /**
      * @param args the command line arguments

@@ -3,6 +3,7 @@ package edu.UPAO.proyecto.Service;
 import edu.UPAO.proyecto.DAO.ProveedorDAO;
 import edu.UPAO.proyecto.Modelo.HistorialProveedor;
 import edu.UPAO.proyecto.Modelo.Proveedor;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,4 +100,11 @@ public class ProveedorService {
     }
     return false;
     }
+    public void registrarCompraOServicio(int idProveedor, String detalle, String tipoEvento,
+                                     LocalDateTime fechaPeticion, LocalDateTime fechaLlegada, double monto) {
+    historial.add(new HistorialProveedor(idProveedor, tipoEvento, detalle, fechaPeticion, fechaLlegada, monto));
+    }
+    public void registrarEventoSimple(int idProveedor, String tipo, String motivo) {
+    historial.add(new HistorialProveedor(idProveedor, tipo, motivo));
+}
 }
