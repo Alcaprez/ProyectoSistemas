@@ -15,6 +15,8 @@ import edu.UPAO.proyecto.Modelo.Producto;
 import edu.UPAO.proyecto.DAO.*;
 import edu.UPAO.proyecto.Modelo.PuntoDiario;
 import edu.UPAO.proyecto.Modelo.PuntoMensual;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class VENTAS extends javax.swing.JFrame {
@@ -129,7 +131,13 @@ public class VENTAS extends javax.swing.JFrame {
             refrescarDashboard(); // actualiza KPIs y gráficos
         });
 
-        btnExportar.addActionListener(e -> exportarCSV()); // nuevo export
+        btnExportar.addActionListener(e -> {
+            try {
+                exportarCSV();
+            } catch (IOException ex) {
+                System.getLogger(VENTAS.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }); // nuevo export
     }
 
     private void refrescarDashboard() {
@@ -149,7 +157,7 @@ public class VENTAS extends javax.swing.JFrame {
         List<PuntoMensual> mensuales = (List<PuntoMensual>) ultimoResultado.get("mensuales");
         Map<String, Double> mapMensual = new LinkedHashMap<>();
         for (PuntoMensual p : mensuales) {
-            mapMensual.put(p.mes().getMonth().name().substring(0, 3), p.total()); // ENE, FEB...
+            mapMensual.put(p.getMes().getMonth().name().substring(0, 3), p.getTotal()); // ENE, FEB...
         }
         chartMensual.setData(mapMensual);
 
@@ -174,50 +182,68 @@ public class VENTAS extends javax.swing.JFrame {
         int last = mesSeleccionado.lengthOfMonth();
         double[] serie = new double[last];
         for (PuntoDiario d : diarias) {
-            int idx = d.dia().getDayOfMonth() - 1;
+            int idx = d.getdia().getDayOfMonth() - 1;
             if (idx >= 0 && idx < last) {
-                serie[idx] = d.total();
+                serie[idx] = d.getTotal();
             }
         }
         chartDiario.setSeries(serie);
         chartDiario.repaint();
     }
 
-    private void exportarCSV() {
-        if (ultimoResultado == null) {
-            JOptionPane.showMessageDialog(this, "No hay datos para exportar.");
-            return;
+    private void exportarCSV() throws IOException {
+    try (FileWriter writer = new FileWriter("ventas_dashboard.csv")) {
+        // Cabecera
+        writer.write("Tipo,Etiqueta,Valor\n");
+
+        // Productos (porProducto)
+        Object o1 = ultimoResultado.get("porProducto");
+        if (o1 instanceof List<?> list) {
+            for (Object item : list) {
+                if (item instanceof Barra b) {
+                    writer.write("Producto," + escapeCsv(b.etiqueta()) + "," + b.total() + "\n");
+                }
+            }
         }
-        try {
-            StringBuilder sb = new StringBuilder("Tipo,Etiqueta,Valor\n");
 
-            List<Barra> porProducto = (List<Barra>) ultimoResultado.get("porProducto");
-            for (Barra b : porProducto) {
-                sb.append(String.format(Locale.US, "Producto,%s,%.2f%n", b.etiqueta(), b.total()));
+        // Medios de pago (mediosPago)
+        Object o2 = ultimoResultado.get("mediosPago");
+        if (o2 instanceof List<?> list) {
+            for (Object item : list) {
+                if (item instanceof Slice s) {
+                    writer.write("MedioPago," + escapeCsv(s.etiqueta()) + "," + s.valor() + "\n");
+                }
             }
-
-            List<Slice> medios = (List<Slice>) ultimoResultado.get("mediosPago");
-            for (Slice s : medios) {
-                sb.append(String.format(Locale.US, "MedioPago,%s,%.2f%n", s.etiqueta(), s.valor()));
-            }
-
-            List<PuntoMensual> mensuales = (List<PuntoMensual>) ultimoResultado.get("mensuales");
-            for (PuntoMensual p : mensuales) {
-                sb.append(String.format(Locale.US, "Mensual,%s,%.2f%n", p.mes(), p.total()));
-            }
-
-            List<PuntoDiario> diarias = (List<PuntoDiario>) ultimoResultado.get("diarias");
-            for (PuntoDiario d : diarias) {
-                sb.append(String.format(Locale.US, "Diario,%s,%.2f%n", d.dia(), d.total()));
-            }
-
-            Path out = Paths.get(System.getProperty("user.home"), "ventas_dashboard.csv");
-            Files.write(out, sb.toString().getBytes("UTF-8"));
-            JOptionPane.showMessageDialog(this, "Exportado a:\n" + out.toAbsolutePath());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al exportar: " + ex.getMessage());
         }
+
+        // Ventas mensuales (mensuales)
+        Object o3 = ultimoResultado.get("mensuales");
+        if (o3 instanceof List<?> list) {
+            for (Object item : list) {
+                if (item instanceof PuntoMensual p) {
+                    writer.write("Mensual," + p.getMes() + "," + p.getTotal() + "\n");
+                }
+            }
+        }
+
+        // Ventas diarias (diarias)
+        Object o4 = ultimoResultado.get("diarias");
+        if (o4 instanceof List<?> list) {
+            for (Object item : list) {
+                if (item instanceof PuntoDiario p) {
+                    writer.write("Diario," + p.getdia() + "," + p.getTotal() + "\n");
+                }
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "Datos exportados a ventas_dashboard.csv");
     }
+}
+    private static String escapeCsv(String s) {
+    if (s == null) return "";
+    String tmp = s.replace("\"", "\"\"");
+    return "\"" + tmp + "\"";
+}
 
 
     @SuppressWarnings("unchecked")

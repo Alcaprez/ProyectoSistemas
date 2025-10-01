@@ -71,7 +71,7 @@ public class PERSONAL extends javax.swing.JFrame {
             if (o instanceof JTable jt) {
                 return jt;
             }
-        } catch (Exception ignore) {
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException ignore) {
         }
 
         // 2) Si no hay campo, intenta sacar la vista del scroll
@@ -140,14 +140,17 @@ public class PERSONAL extends javax.swing.JFrame {
                     aplicarFiltros();
                 }
 
+                @Override
                 public void insertUpdate(javax.swing.event.DocumentEvent e) {
                     filtra();
                 }
 
+                @Override
                 public void removeUpdate(javax.swing.event.DocumentEvent e) {
                     filtra();
                 }
 
+                @Override
                 public void changedUpdate(javax.swing.event.DocumentEvent e) {
                     filtra();
                 }
@@ -220,7 +223,6 @@ public class PERSONAL extends javax.swing.JFrame {
                 }
                 JOptionPane.showMessageDialog(this, "Exportado a:\n" + f.getAbsolutePath());
             } catch (Exception ex) {
-                ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "No se pudo exportar");
             }
         }
@@ -273,7 +275,7 @@ public class PERSONAL extends javax.swing.JFrame {
             String q = txtBuscar.getText().toLowerCase();
             base = base.stream().filter(r -> {
                 String nom = r.getUsuario() != null ? r.getUsuario().getNombreComp().toLowerCase() : "";
-                String id = r.getUsuario() != null ? r.getUsuario().getId().toLowerCase() : "";
+                String id = r.getUsuario() != null ? String.valueOf(r.getUsuario().getId()) : "";
                 return nom.contains(q) || id.contains(q);
             }).toList();
         }

@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDAO {
+
     private static List<Usuario> usuarios = new ArrayList<>();
 
     static {
-    usuarios.add(new Usuario(1, 12345678, true, 1, "Juan Pérez", "CAJERO", "cajero1", "1234"));
-    usuarios.add(new Usuario(2, 87654321, true, 2, "María López", "ADMIN", "admin1", "admin"));
-    usuarios.add(new Usuario(3, 11112222, false, 3, "Carlos Ruiz", "CAJERO", "cajero2", "0000")); 
+        // Usuarios de prueba iniciales
+        usuarios.add(new Usuario(1, 12345678, true, "TiendaApurimac", "Juan Pérez", "CAJERO", "cajero1", "1234"));
+        usuarios.add(new Usuario(2, 87654321, true, "Tienda Trujillo", "María López", "ADMIN", "admin1", "admin"));
+        usuarios.add(new Usuario(3, 11112222, false, "Tienda Lima", "Carlos Ruiz", "CAJERO", "cajero2", "0000"));
     }
-
 
     // Listar todos los usuarios
     public List<Usuario> listar() {
@@ -22,7 +23,7 @@ public class UsuarioDAO {
     // Buscar usuario por ID
     public Usuario buscarPorId(int id) {
         return usuarios.stream()
-                .filter(u -> u.getIdUsuario() == id)
+                .filter(u -> u.getId() == id)
                 .findFirst()
                 .orElse(null);
     }
@@ -52,7 +53,7 @@ public class UsuarioDAO {
 
     // Eliminar usuario por ID
     public void eliminar(int id) {
-        usuarios.removeIf(u -> u.getIdUsuario() == id);
+        usuarios.removeIf(u -> u.getId() == id);
     }
 
     // Activar o desactivar usuario
@@ -62,4 +63,4 @@ public class UsuarioDAO {
             u.setEstado(nuevoEstado);
         }
     }
-}
+ }

@@ -20,7 +20,7 @@ public class PuntoDiario {
 
     @Override
     public String toString() {
-        return fecha + " → " + total;
+        return dia + " → " + total;
     }
 }
 

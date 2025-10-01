@@ -230,11 +230,9 @@ public class Administrador extends javax.swing.JFrame {
 
     public static void main(String[] args) {
     java.awt.EventQueue.invokeLater(() -> {
-        new LoginFrame().setVisible(true);
+        new Login().setVisible(true);  // <- Reemplazar LoginFrame por Login
     });
-    }
-
-    
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
