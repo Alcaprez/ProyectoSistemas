@@ -3,9 +3,7 @@ package frame;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +11,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -39,7 +36,7 @@ public class pag3 extends javax.swing.JPanel {
     private void configurarTablaUsuarios() {
         modeloUsuarios = (DefaultTableModel) jTable1.getModel();
         
-        // Configuración visual
+        
         jTable1.setRowHeight(45);
         jTable1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         jTable1.setGridColor(new Color(230, 230, 230));
@@ -47,20 +44,20 @@ public class pag3 extends javax.swing.JPanel {
         jTable1.setShowGrid(true);
         jTable1.setIntercellSpacing(new Dimension(1, 1));
         
-        // Header
+        
         jTable1.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
         jTable1.getTableHeader().setBackground(new Color(25, 118, 210));
         jTable1.getTableHeader().setForeground(Color.WHITE);
         jTable1.getTableHeader().setPreferredSize(new Dimension(0, 35));
         
-        // Anchos de columnas
+        
         if (jTable1.getColumnCount() == 6) {
             int[] anchos = {120, 150, 200, 100, 80, 130};
             for (int i = 0; i < anchos.length; i++) {
                 jTable1.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
             }
             
-            // Renderers personalizados
+            
             jTable1.getColumnModel().getColumn(3).setCellRenderer(new RolRenderer());
             jTable1.getColumnModel().getColumn(4).setCellRenderer(new EstadoRenderer());
         }
@@ -69,30 +66,30 @@ public class pag3 extends javax.swing.JPanel {
     private void configurarTablaLogs() {
         modeloLogs = (DefaultTableModel) tablaLogs.getModel();
         
-        // Configuración visual
+        
         tablaLogs.setRowHeight(40);
         tablaLogs.setFont(new Font("Monospaced", Font.PLAIN, 11));
         tablaLogs.setGridColor(new Color(240, 240, 240));
         tablaLogs.setSelectionBackground(new Color(255, 245, 230));
         
-        // Header
+        
         tablaLogs.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 11));
         tablaLogs.getTableHeader().setBackground(new Color(250, 250, 250));
         tablaLogs.getTableHeader().setForeground(new Color(60, 60, 60));
         
-        // Anchos de columnas
+        
         if (tablaLogs.getColumnCount() == 5) {
             int[] anchos = {150, 180, 180, 150, 100};
             for (int i = 0; i < anchos.length; i++) {
                 tablaLogs.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
             }
             
-            // Renderer para estado
+            
             tablaLogs.getColumnModel().getColumn(4).setCellRenderer(new EstadoLogRenderer());
         }
     }
     
-    // Renderer para columna Rol
+    
     class RolRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -127,7 +124,7 @@ public class pag3 extends javax.swing.JPanel {
         }
     }
     
-    // Renderer para columna Estado (usuarios)
+    
     class EstadoRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -151,7 +148,7 @@ public class pag3 extends javax.swing.JPanel {
         }
     }
     
-    // Renderer para columna Estado (logs)
+    
     class EstadoLogRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -171,7 +168,7 @@ public class pag3 extends javax.swing.JPanel {
         }
     }
     
-    // MÉTODO: Agregar Usuario
+    
     private void agregarUsuario() {
         JTextField txtUsuario = new JTextField();
         JTextField txtNombre = new JTextField();
@@ -209,7 +206,7 @@ public class pag3 extends javax.swing.JPanel {
                     "Se han asignado los permisos según el rol: " + rol, 
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 
-                // Registrar en logs
+                
                 registrarLog(usuario, "Creación de usuario con rol " + rol, "Sistema");
             } else {
                 JOptionPane.showMessageDialog(this, "Complete todos los campos", 
@@ -218,7 +215,7 @@ public class pag3 extends javax.swing.JPanel {
         }
     }
     
-    // MÉTODO: Editar Permisos (cambiar rol y estado)
+    
     private void editarPermisos() {
         int fila = jTable1.getSelectedRow();
         
@@ -234,7 +231,7 @@ public class pag3 extends javax.swing.JPanel {
         String rolActual = modeloUsuarios.getValueAt(fila, 3).toString();
         String estadoActual = modeloUsuarios.getValueAt(fila, 4).toString();
         
-        JComboBox<String> comboRol = new JComboBox<>(new String[]{"admin", "supervisor", "empleado"});
+        JComboBox<String> comboRol = new JComboBox<>(new String[]{"administrador", "gerente", "empleado"});
         comboRol.setSelectedItem(rolActual);
         JComboBox<String> comboEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
         comboEstado.setSelectedItem(estadoActual);
@@ -257,7 +254,7 @@ public class pag3 extends javax.swing.JPanel {
             modeloUsuarios.setValueAt(nuevoRol, fila, 3);
             modeloUsuarios.setValueAt(nuevoEstado, fila, 4);
             
-            // Actualizar última fecha de acceso
+            
             String fechaActual = LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             modeloUsuarios.setValueAt(fechaActual, fila, 5);
@@ -276,13 +273,13 @@ public class pag3 extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, mensaje, 
                 "Éxito", JOptionPane.INFORMATION_MESSAGE);
             
-            // Registrar en logs
+            
             String accion = "Modificación de permisos: rol=" + nuevoRol + ", estado=" + nuevoEstado;
             registrarLog(usuario, accion, "Sistema");
         }
     }
     
-    // MÉTODO: Eliminar Usuario (dar de baja)
+    
     private void eliminarUsuario() {
         int fila = jTable1.getSelectedRow();
         
@@ -310,7 +307,7 @@ public class pag3 extends javax.swing.JPanel {
             opciones,
             opciones[0]);
         
-        if (opcion == 0) { // Desactivar
+        if (opcion == 0) { 
             modeloUsuarios.setValueAt("inactivo", fila, 4);
             JOptionPane.showMessageDialog(this, 
                 "Usuario bloqueado exitosamente\n" +
@@ -319,7 +316,7 @@ public class pag3 extends javax.swing.JPanel {
             
             registrarLog(usuario, "Usuario bloqueado/desactivado", "Sistema");
             
-        } else if (opcion == 1) { // Eliminar definitivamente
+        } else if (opcion == 1) { 
             int confirmacion = JOptionPane.showConfirmDialog(this,
                 "¿Está seguro de eliminar permanentemente a:\n" +
                 usuario + " (" + nombre + ")?\n\n" +
@@ -348,8 +345,8 @@ public class pag3 extends javax.swing.JPanel {
     
     private void cargarDatosEjemplo() {
         Object[][] usuarios = {
-            {"admin_user", "Juan Pérez", "juan@empresa.com", "admin", "activo", "2024-01-20 10:30"},
-            {"supervisor01", "María García", "maria@empresa.com", "supervisor", "activo", "2024-01-20 09:15"},
+            {"administrador01", "Juan Pérez", "juan@empresa.com", "administrador", "activo", "2024-01-20 10:30"},
+            {"gerente01", "María García", "maria@empresa.com", "gerente", "activo", "2024-01-20 09:15"},
             {"empleado01", "Carlos López", "carlos@empresa.com", "empleado", "activo", "2024-01-19 16:45"},
             {"empleado02", "Ana Martínez", "ana@empresa.com", "empleado", "inactivo", "2024-01-15 14:20"}
         };
@@ -359,11 +356,10 @@ public class pag3 extends javax.swing.JPanel {
         }
         
         Object[][] logs = {
-            {"admin_user", "Inicio de sesión", "2024-01-20 10:30:15", "192.168.1.100", "Exitoso"},
-            {"supervisor01", "Inicio de sesión", "2024-01-20 09:15:22", "192.168.1.101", "Exitoso"},
+            {"administrador01", "Inicio de sesión", "2024-01-20 10:30:15", "192.168.1.100", "Exitoso"},
+            {"gerente01", "Inicio de sesión", "2024-01-20 09:15:22", "192.168.1.101", "Exitoso"},
             {"empleado01", "Intento fallido", "2024-01-20 08:45:10", "192.168.1.102", "Fallido"},
-            {"empleado01", "Inicio de sesión", "2024-01-19 16:45:30", "192.168.1.102", "Exitoso"},
-            {"admin_user", "Cierre de sesión", "2024-01-19 18:00:00", "192.168.1.100", "Exitoso"}
+            {"empleado02", "Inicio de sesión", "2024-01-19 16:45:30", "192.168.1.102", "Exitoso"},
         };
         
         for (Object[] log : logs) {
@@ -403,14 +399,14 @@ public class pag3 extends javax.swing.JPanel {
             }
         });
 
-        editarpermisos.setText("Editar Permisos");
+        editarpermisos.setText("Editar");
         editarpermisos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editarpermisosActionPerformed(evt);
             }
         });
 
-        eliminarusuario.setText("Eliminar Usuario");
+        eliminarusuario.setText("Eliminar");
         eliminarusuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eliminarusuarioActionPerformed(evt);
@@ -465,19 +461,19 @@ public class pag3 extends javax.swing.JPanel {
                 .addGap(30, 30, 30)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3))
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(editarpermisos)
-                            .addComponent(eliminarusuario))
-                        .addContainerGap(63, Short.MAX_VALUE))
+                            .addComponent(eliminarusuario)
+                            .addComponent(editarpermisos))
+                        .addGap(88, 88, 88))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAgregarUsuario)
-                        .addGap(32, 32, 32))))
+                        .addGap(54, 54, 54))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -486,17 +482,16 @@ public class pag3 extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(btnAgregarUsuario))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
+                        .addGap(46, 46, 46)
                         .addComponent(editarpermisos)
                         .addGap(18, 18, 18)
-                        .addComponent(eliminarusuario))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(eliminarusuario)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
@@ -505,9 +500,9 @@ public class pag3 extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(34, 34, 34)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -521,9 +516,7 @@ public class pag3 extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

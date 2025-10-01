@@ -11,15 +11,15 @@ public class pag2 extends javax.swing.JPanel {
     }
     
      private void configurarTabla() {
-        // Cambiar nombres de columnas
+        
         javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
-            return false; // Todas las celdas son de solo lectura
+            return false; 
         }
     };
     
-    // Asignar modelo a la tabla
+    
     tablaDevoluciones.setModel(modelo);
         String[] columnas = {"ID Producto", "Cliente", "Cantidad", "Motivo", "Fecha", "Estado"};
         modelo.setColumnIdentifiers(columnas);
@@ -47,47 +47,21 @@ public class pag2 extends javax.swing.JPanel {
             }
         });
         
-        // Agregar listener para actualizar contadores cuando cambie la tabla
-        modelo.addTableModelListener(e -> actualizarContadores());
+       
     }
     
-    // MÉTODO NUEVO: Actualizar contadores en tiempo real
-    private void actualizarContadores() {
-        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaDevoluciones.getModel();
-        
-        int totalDevoluciones = modelo.getRowCount();
-        int pendientes = 0;
-        int aprobadas = 0;
-        int rechazadas = 0;
-        
-        // Contar cada estado
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            String estado = modelo.getValueAt(i, 5).toString();
-            switch (estado) {
-                case "Pendiente":
-                    pendientes++;
-                    break;
-                case "Aprobada":
-                    aprobadas++;
-                    break;
-                case "Rechazada":
-                    rechazadas++;
-                    break;
-            }
-        }
-        
-    }
+
     
-    // MÉTODO 2: Cargar datos de ejemplo
+    
     private void cargarDatosEjemplo() {
         javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaDevoluciones.getModel();
         
-        // Datos de ejemplo
+        
         Object[][] datos = {
-            {"PROD001", "Juan Pérez", "1", "Defecto de fábrica", "25/09/2024", "Pendiente"},
-            {"PROD002", "Ana García", "2", "No funciona", "24/09/2024", "Pendiente"},
-            {"PROD003", "Carlos López", "1", "Producto incorrecto", "23/09/2024", "Aprobada"},
-            {"PROD004", "María Rodríguez", "1", "Pantalla dañada", "22/09/2024", "Rechazada"}
+            {"PROD001", "Juan Pérez", "1", "Defectuoso", "25/09/2024", "Pendiente"},
+            {"PROD002", "Ana García", "2", "Caducado", "24/09/2024", "Pendiente"},
+            {"PROD003", "Carlos López", "1", "Caducado", "23/09/2024", "Aprobada"},
+            {"PROD004", "María Rodríguez", "1", "Se confundio mi cholo", "22/09/2024", "Rechazada"}
         };
         
         for (Object[] fila : datos) {
@@ -120,7 +94,7 @@ public class pag2 extends javax.swing.JPanel {
             javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }
     
-    // MÉTODO 4: Aprobar devolución (conectar a btnAprobar)
+    
     private void aprobarDevolucion(int fila) {
         javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaDevoluciones.getModel();
         
@@ -134,7 +108,7 @@ public class pag2 extends javax.swing.JPanel {
             javax.swing.JOptionPane.YES_NO_OPTION);
         
         if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
-            modelo.setValueAt("Aprobada", fila, 6);
+            modelo.setValueAt("Aprobada", fila, 5);
             
             String numeroNota = "NC" + System.currentTimeMillis() % 10000;
             
@@ -145,11 +119,11 @@ public class pag2 extends javax.swing.JPanel {
                 "Aprobación Exitosa",
                 javax.swing.JOptionPane.INFORMATION_MESSAGE);
             
-            // Los contadores se actualizarán automáticamente por el TableModelListener
+            
         }
     }
     
-    // MÉTODO 5: Rechazar devolución (conectar a btnRechazar)
+    
     private void rechazarDevolucion(int fila) {
         javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaDevoluciones.getModel();
         
@@ -161,7 +135,7 @@ public class pag2 extends javax.swing.JPanel {
             javax.swing.JOptionPane.WARNING_MESSAGE);
         
         if (motivoRechazo != null && !motivoRechazo.trim().isEmpty()) {
-            modelo.setValueAt("Rechazada", fila, 6);
+            modelo.setValueAt("Rechazada", fila, 5);
             
             javax.swing.JOptionPane.showMessageDialog(this,
                 "DEVOLUCIÓN RECHAZADA\n\n" +
@@ -170,7 +144,7 @@ public class pag2 extends javax.swing.JPanel {
                 "Rechazo Registrado",
                 javax.swing.JOptionPane.WARNING_MESSAGE);
             
-            // Los contadores se actualizarán automáticamente por el TableModelListener
+            
         }
     }
     
@@ -234,33 +208,35 @@ public class pag2 extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(92, 92, 92)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 23, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 820, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnVer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAprobar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnRechazar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addGap(43, 43, 43))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(143, 143, 143)
+                        .addGap(66, 66, 66)
                         .addComponent(btnVer)
                         .addGap(18, 18, 18)
                         .addComponent(btnAprobar)
                         .addGap(18, 18, 18)
-                        .addComponent(btnRechazar)))
-                .addContainerGap(52, Short.MAX_VALUE))
+                        .addComponent(btnRechazar))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

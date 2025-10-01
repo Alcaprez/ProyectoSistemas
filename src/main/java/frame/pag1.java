@@ -7,253 +7,530 @@ public class pag1 extends javax.swing.JPanel {
         initComponents();
         
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        
+        jTable2.setFillsViewportHeight(true);
+        jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        
+        // Hacer clickeable el panel de notificaciones
+        jPanel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mostrarNotificaciones();
+            }
+        });
+        
+        
+        actualizarContadorStockCritico();
+    }
     
-    // Configurar tabla para scroll
-    jTable2.setFillsViewportHeight(true);
-    jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+    
+    private boolean validarNombreProducto(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return false;
+        }
+        return nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+");
+    }
+    
+    
+    private String determinarEstado(int stock) {
+        if (stock == 0) {
+            return "Agotado";
+        } else if (stock < 50) {
+            return "Casi Agotado";
+        } else {
+            return "Disponible";
+        }
+    }
+    
+    
+    private void actualizarContadorStockCritico() {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        int contador = 0;
+        
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            int stock = Integer.parseInt(modelo.getValueAt(i, 2).toString());
+            if (stock < 50) {
+                contador++;
+            }
+        }
+        
+        jLabel12.setText(String.valueOf(contador));
         
         
+        if (contador == 0) {
+            jLabel12.setForeground(new java.awt.Color(34, 139, 34)); 
+        } else if (contador < 3) {
+            jLabel12.setForeground(new java.awt.Color(255, 165, 0)); 
+        } else {
+            jLabel12.setForeground(new java.awt.Color(220, 20, 60)); 
+        }
+    }
+    
+    
+    private void mostrarNotificaciones() {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        
+        
+        java.util.List<String[]> productosConStockBajo = new java.util.ArrayList<>();
+        
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            String codigo = modelo.getValueAt(i, 0).toString();
+            String nombre = modelo.getValueAt(i, 1).toString();
+            int stock = Integer.parseInt(modelo.getValueAt(i, 2).toString());
+            String estado = modelo.getValueAt(i, 4).toString();
+            
+            if (stock < 50) {
+                productosConStockBajo.add(new String[]{codigo, nombre, String.valueOf(stock), estado});
+            }
+        }
+        
+        
+        javax.swing.JDialog dialogoNotificaciones = new javax.swing.JDialog();
+        dialogoNotificaciones.setTitle("Notificaciones de Stock");
+        dialogoNotificaciones.setSize(650, 450);
+        dialogoNotificaciones.setLocationRelativeTo(this);
+        dialogoNotificaciones.setModal(true);
+        
+        
+        javax.swing.JPanel panelPrincipal = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
+        panelPrincipal.setBackground(java.awt.Color.WHITE);
+        panelPrincipal.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        
+        javax.swing.JPanel panelHeader = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        panelHeader.setBackground(java.awt.Color.WHITE);
+        
+        javax.swing.JLabel lblTitulo = new javax.swing.JLabel("🔔 Notificaciones de Inventario");
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 24));
+        lblTitulo.setForeground(new java.awt.Color(220, 20, 60));
+        panelHeader.add(lblTitulo);
+        
+        
+        if (productosConStockBajo.isEmpty()) {
+            javax.swing.JPanel panelVacio = new javax.swing.JPanel();
+            panelVacio.setLayout(new javax.swing.BoxLayout(panelVacio, javax.swing.BoxLayout.Y_AXIS));
+            panelVacio.setBackground(java.awt.Color.WHITE);
+            
+            javax.swing.JLabel lblIcono = new javax.swing.JLabel("✅");
+            lblIcono.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 72));
+            lblIcono.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+            
+            javax.swing.JLabel lblMensaje = new javax.swing.JLabel("No hay productos con stock bajo");
+            lblMensaje.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 18));
+            lblMensaje.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+            lblMensaje.setForeground(new java.awt.Color(100, 100, 100));
+            
+            panelVacio.add(javax.swing.Box.createVerticalGlue());
+            panelVacio.add(lblIcono);
+            panelVacio.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 20)));
+            panelVacio.add(lblMensaje);
+            panelVacio.add(javax.swing.Box.createVerticalGlue());
+            
+            panelPrincipal.add(panelHeader, java.awt.BorderLayout.NORTH);
+            panelPrincipal.add(panelVacio, java.awt.BorderLayout.CENTER);
+        } else {
+            
+            String[] columnas = {"Código", "Producto", "Stock", "Estado"};
+            javax.swing.table.DefaultTableModel modeloNotif = new javax.swing.table.DefaultTableModel(columnas, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            
+            for (String[] producto : productosConStockBajo) {
+                modeloNotif.addRow(producto);
+            }
+            
+            javax.swing.JTable tablaNotificaciones = new javax.swing.JTable(modeloNotif);
+            tablaNotificaciones.setRowHeight(35);
+            tablaNotificaciones.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+            tablaNotificaciones.getTableHeader().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+            tablaNotificaciones.getTableHeader().setBackground(new java.awt.Color(220, 20, 60));
+            tablaNotificaciones.getTableHeader().setForeground(java.awt.Color.WHITE);
+            
+            
+            tablaNotificaciones.getColumnModel().getColumn(3).setCellRenderer(
+                new javax.swing.table.DefaultTableCellRenderer() {
+                    @Override
+                    public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, 
+                            Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                        
+                        javax.swing.JLabel label = (javax.swing.JLabel) super.getTableCellRendererComponent(
+                            table, value, isSelected, hasFocus, row, column);
+                        
+                        label.setHorizontalAlignment(javax.swing.JLabel.CENTER);
+                        label.setOpaque(true);
+                        label.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+                        
+                        String estado = value.toString();
+                        if (estado.equals("Agotado")) {
+                            label.setBackground(new java.awt.Color(220, 20, 60));
+                            label.setForeground(java.awt.Color.WHITE);
+                        } else if (estado.equals("Casi Agotado")) {
+                            label.setBackground(new java.awt.Color(255, 165, 0));
+                            label.setForeground(java.awt.Color.WHITE);
+                        }
+                        
+                        return label;
+                    }
+                }
+            );
+            
+            javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(tablaNotificaciones);
+            
+            
+            javax.swing.JPanel panelResumen = new javax.swing.JPanel();
+            panelResumen.setBackground(new java.awt.Color(255, 245, 230));
+            panelResumen.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 165, 0), 2),
+                javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15)
+            ));
+            panelResumen.setLayout(new javax.swing.BoxLayout(panelResumen, javax.swing.BoxLayout.Y_AXIS));
+            
+            javax.swing.JLabel lblResumen = new javax.swing.JLabel(
+                "⚠️  " + productosConStockBajo.size() + " producto(s) requieren atención"
+            );
+            lblResumen.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+            lblResumen.setForeground(new java.awt.Color(180, 80, 0));
+            
+            javax.swing.JLabel lblAccion = new javax.swing.JLabel(
+                "Se recomienda realizar una orden de compra"
+            );
+            lblAccion.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+            lblAccion.setForeground(new java.awt.Color(100, 100, 100));
+            
+            panelResumen.add(lblResumen);
+            panelResumen.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+            panelResumen.add(lblAccion);
+            
+            panelPrincipal.add(panelHeader, java.awt.BorderLayout.NORTH);
+            panelPrincipal.add(scrollPane, java.awt.BorderLayout.CENTER);
+            panelPrincipal.add(panelResumen, java.awt.BorderLayout.SOUTH);
+        }
+        
+        dialogoNotificaciones.add(panelPrincipal);
+        dialogoNotificaciones.setVisible(true);
     }
     
     private void agregarProducto() {
-    String codigo = jTextField1.getText().trim();
-    
-    // Validar que no esté vacío
-    if (codigo.isEmpty() || codigo.equals("ID Producto")) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Ingrese un código válido");
-        return;
-    }
-    
-    // Solicitar datos faltantes con diálogos
-    String nombre = javax.swing.JOptionPane.showInputDialog(this, "Nombre del producto:");
-    if (nombre == null || nombre.trim().isEmpty()) return;
-    
-    String stockStr = javax.swing.JOptionPane.showInputDialog(this, "Stock inicial:");
-    if (stockStr == null) return;
-    
-    String precioStr = javax.swing.JOptionPane.showInputDialog(this, "Precio unitario:");
-    if (precioStr == null) return;
-    
-    try {
-        int stock = Integer.parseInt(stockStr);
-        double precio = Double.parseDouble(precioStr);
-        String estado = stock > 0 ? "Disponible" : "Agotado";
+        String codigo = jTextField1.getText().trim();
+        
+        if (codigo.isEmpty() || codigo.equals("ID Producto")) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Ingrese un código válido", 
+                "Error", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String nombre = null;
+        boolean nombreValido = false;
+        
+        while (!nombreValido) {
+            nombre = javax.swing.JOptionPane.showInputDialog(this, 
+                "Nombre del producto : ");
+            
+            if (nombre == null) return;
+            
+            if (validarNombreProducto(nombre)) {
+                nombreValido = true;
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "El nombre solo puede contener letras y espacios\n" +
+                    "No se permiten números ni caracteres especiales", 
+                    "Nombre Inválido", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        String stockStr = null;
+        int stock = -1;
+        boolean stockValido = false;
+        
+        while (!stockValido) {
+            stockStr = javax.swing.JOptionPane.showInputDialog(this, 
+                "Stock inicial : ");
+            
+            if (stockStr == null) return;
+            
+            try {
+                stock = Integer.parseInt(stockStr.trim());
+                
+                if (stock < 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "El stock no puede ser negativo\n" +
+                        "Ingrese un valor de 0 o mayor", 
+                        "Stock Inválido", 
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                } else {
+                    stockValido = true;
+                }
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Ingrese un número válido para el stock", 
+                    "Error de Formato", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        String precioStr = null;
+        double precio = -1;
+        boolean precioValido = false;
+        
+        while (!precioValido) {
+            precioStr = javax.swing.JOptionPane.showInputDialog(this, 
+                "Precio unitario : ");
+            
+            if (precioStr == null) return;
+            
+            try {
+                precio = Double.parseDouble(precioStr.trim());
+                
+                if (precio < 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "El precio no puede ser negativo\n" +
+                        "Ingrese un valor de 0 o mayor", 
+                        "Precio Inválido", 
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                } else {
+                    precioValido = true;
+                }
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Ingrese un número válido para el precio", 
+                    "Error de Formato", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        String estado = determinarEstado(stock);
         
         javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
         Object[] fila = {codigo, nombre, stock, precio, estado};
         modelo.addRow(fila);
         
         jTextField1.setText("ID Producto");
-        javax.swing.JOptionPane.showMessageDialog(this, "Producto agregado: " + nombre);
         
-    } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Stock y precio deben ser números válidos");
-    }
-}
-    private void eliminarProducto() {
-    // Verificar que hay una fila seleccionada
-    int filaSeleccionada = jTable2.getSelectedRow();
-    
-    if (filaSeleccionada == -1) {
+        
+        actualizarContadorStockCritico();
+        
+        String mensajeEstado = "";
+        if (estado.equals("Casi Agotado")) {
+            mensajeEstado = "\n⚠️ ADVERTENCIA: Stock bajo (menos de 50 unidades ejemplo*)";
+        } else if (estado.equals("Agotado")) {
+            mensajeEstado = "\n❌ ADVERTENCIA: Producto sin stock";
+        }
+        
         javax.swing.JOptionPane.showMessageDialog(this, 
-            "Seleccione un producto de la tabla para eliminar", 
-            "No hay selección", 
-            javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    // Obtener datos del producto seleccionado
-    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
-    String codigo = modelo.getValueAt(filaSeleccionada, 0).toString();
-    String nombre = modelo.getValueAt(filaSeleccionada, 1).toString();
-    
-    // Confirmar eliminación
-    int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this, 
-        "¿Está seguro de eliminar el producto?\n\n" +
-        "Código: " + codigo + "\n" +
-        "Nombre: " + nombre, 
-        "Confirmar Eliminación", 
-        javax.swing.JOptionPane.YES_NO_OPTION,
-        javax.swing.JOptionPane.QUESTION_MESSAGE);
-    
-    // Si confirma, eliminar
-    if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
-        modelo.removeRow(filaSeleccionada);
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Producto eliminado: " + nombre, 
-            "Eliminación Exitosa", 
+            "Producto agregado: " + nombre + "\n" +
+            "Stock: " + stock + "\n" +
+            "Precio: $" + precio + "\n" +
+            "Estado: " + estado + mensajeEstado, 
+            "Producto Agregado", 
             javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }
-}  
+    
+    private void eliminarProducto() {
+        int filaSeleccionada = jTable2.getSelectedRow();
+        
+        if (filaSeleccionada == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Seleccione un producto de la tabla para eliminar", 
+                "No hay selección", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        String codigo = modelo.getValueAt(filaSeleccionada, 0).toString();
+        String nombre = modelo.getValueAt(filaSeleccionada, 1).toString();
+        
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this, 
+            "¿Está seguro de eliminar el producto?\n\n" +
+            "Código: " + codigo + "\n" +
+            "Nombre: " + nombre, 
+            "Confirmar Eliminación", 
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            modelo.removeRow(filaSeleccionada);
+            
+            
+            actualizarContadorStockCritico();
+            
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Producto eliminado: " + nombre, 
+                "Eliminación Exitosa", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
     
     private void registrarEntrada() {
-    // Verificar que hay una fila seleccionada
-    int filaSeleccionada = jTable2.getSelectedRow();
-    
-    if (filaSeleccionada == -1) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Seleccione un producto existente para registrar entrada de mercancía", 
-            "No hay selección", 
-            javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    // Obtener datos del producto seleccionado
-    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
-    String codigo = modelo.getValueAt(filaSeleccionada, 0).toString();
-    String nombre = modelo.getValueAt(filaSeleccionada, 1).toString();
-    int stockActual = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 2).toString());
-    
-    // Solicitar datos de la entrada
-    String cantidadStr = javax.swing.JOptionPane.showInputDialog(this, 
-        "REGISTRO DE ENTRADA DE MERCANCÍA\n\n" +
-        "Producto: " + nombre + "\n" +
-        "Stock actual: " + stockActual + "\n\n" +
-        "Cantidad recibida:", 
-        "0");
-    
-    if (cantidadStr == null) return; // Usuario canceló
-    
-    String proveedor = javax.swing.JOptionPane.showInputDialog(this, 
-        "Nombre del proveedor:", 
-        "Proveedor");
-    
-    if (proveedor == null || proveedor.trim().isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Debe especificar el proveedor", 
-            "Proveedor Requerido", 
-            javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    try {
-        int cantidadRecibida = Integer.parseInt(cantidadStr.trim());
+        int filaSeleccionada = jTable2.getSelectedRow();
         
-        if (cantidadRecibida <= 0) {
+        if (filaSeleccionada == -1) {
             javax.swing.JOptionPane.showMessageDialog(this, 
-                "La cantidad debe ser mayor a 0", 
-                "Cantidad Inválida", 
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+                "Seleccione un producto existente para registrar entrada de mercancía", 
+                "No hay selección", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        // Calcular nuevo stock
-        int nuevoStock = stockActual + cantidadRecibida;
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        String codigo = modelo.getValueAt(filaSeleccionada, 0).toString();
+        String nombre = modelo.getValueAt(filaSeleccionada, 1).toString();
+        int stockActual = Integer.parseInt(modelo.getValueAt(filaSeleccionada, 2).toString());
         
-        // Actualizar stock en la tabla
-        modelo.setValueAt(nuevoStock, filaSeleccionada, 2);
-        
-        // Actualizar estado
-        String nuevoEstado = "Disponible"; // Siempre disponible después de entrada
-        modelo.setValueAt(nuevoEstado, filaSeleccionada, 4);
-        
-        // Generar fecha y hora actual
-        String fechaHora = java.time.LocalDateTime.now()
-            .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        
-        // Log de la operación (simular log de proveedor)
-        String logEntry = String.format(
-            "[%s] ENTRADA - Producto: %s | Cantidad: +%d | Stock: %d→%d | Proveedor: %s",
-            fechaHora, nombre, cantidadRecibida, stockActual, nuevoStock, proveedor
-        );
-        
-        // Mostrar confirmación con resumen
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "ENTRADA REGISTRADA EXITOSAMENTE\n\n" +
+        String cantidadStr = javax.swing.JOptionPane.showInputDialog(this, 
+            "REGISTRO DE ENTRADA DE MERCANCÍA\n\n" +
             "Producto: " + nombre + "\n" +
-            "Cantidad recibida: +" + cantidadRecibida + "\n" +
-            "Stock anterior: " + stockActual + "\n" +
-            "Stock nuevo: " + nuevoStock + "\n" +
-            "Proveedor: " + proveedor + "\n" +
-            "Fecha: " + fechaHora, 
-            "Entrada Registrada", 
-            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            "Stock actual: " + stockActual + "\n\n" +
+            "Cantidad recibida:", 
+            "0");
         
-        // Imprimir log en consola (en producción iría a archivo/BD)
-        System.out.println("LOG ENTRADA: " + logEntry);
+        if (cantidadStr == null) return;
         
-        // Aquí irían las llamadas para actualizar BD y logs
-        // actualizarStockBD(codigo, nuevoStock);
-        // guardarLogProveedor(codigo, cantidadRecibida, proveedor, fechaHora);
+        String proveedor = javax.swing.JOptionPane.showInputDialog(this, 
+            "Nombre del proveedor:", 
+            "Proveedor");
         
-    } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "La cantidad debe ser un número válido", 
-            "Error de Formato", 
-            javax.swing.JOptionPane.ERROR_MESSAGE);
+        if (proveedor == null || proveedor.trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Debe especificar el proveedor", 
+                "Proveedor Requerido", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            int cantidadRecibida = Integer.parseInt(cantidadStr.trim());
+            
+            if (cantidadRecibida < 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "La cantidad no puede ser negativa", 
+                    "Cantidad Inválida", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (cantidadRecibida == 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "La cantidad debe ser mayor a 0", 
+                    "Cantidad Inválida", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            int nuevoStock = stockActual + cantidadRecibida;
+            
+            modelo.setValueAt(nuevoStock, filaSeleccionada, 2);
+            String nuevoEstado = determinarEstado(nuevoStock);
+            modelo.setValueAt(nuevoEstado, filaSeleccionada, 4);
+            
+            
+            actualizarContadorStockCritico();
+            
+            String fechaHora = java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            
+            String logEntry = String.format(
+                "[%s] ENTRADA - Producto: %s | Cantidad: +%d | Stock: %d→%d | Proveedor: %s",
+                fechaHora, nombre, cantidadRecibida, stockActual, nuevoStock, proveedor
+            );
+            
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "ENTRADA REGISTRADA EXITOSAMENTE\n\n" +
+                "Producto: " + nombre + "\n" +
+                "Cantidad recibida: +" + cantidadRecibida + "\n" +
+                "Stock anterior: " + stockActual + "\n" +
+                "Stock nuevo: " + nuevoStock + "\n" +
+                "Estado: " + nuevoEstado + "\n" +
+                "Proveedor: " + proveedor + "\n" +
+                "Fecha: " + fechaHora, 
+                "Entrada Registrada", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+            System.out.println("LOG ENTRADA: " + logEntry);
+            
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "La cantidad debe ser un número válido", 
+                "Error de Formato", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
     
     private void actualizarStock() {
-    // Verificar que hay una fila seleccionada
-    int filaSeleccionada = jTable2.getSelectedRow();
-    
-    if (filaSeleccionada == -1) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Seleccione un producto de la tabla para actualizar su stock", 
-            "No hay selección", 
-            javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    // Obtener datos del producto seleccionado
-    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
-    String codigo = modelo.getValueAt(filaSeleccionada, 0).toString();
-    String nombre = modelo.getValueAt(filaSeleccionada, 1).toString();
-    String stockActual = modelo.getValueAt(filaSeleccionada, 2).toString();
-    
-    // Solicitar nuevo stock
-    String nuevoStockStr = javax.swing.JOptionPane.showInputDialog(this, 
-        "Producto: " + nombre + "\n" +
-        "Stock actual: " + stockActual + "\n\n" +
-        "Ingrese el nuevo stock:", 
-        stockActual);
-    
-    // Validar que no canceló
-    if (nuevoStockStr == null) {
-        return; // Usuario canceló
-    }
-    
-    try {
-        int nuevoStock = Integer.parseInt(nuevoStockStr.trim());
+        int filaSeleccionada = jTable2.getSelectedRow();
         
-        // Validar que el stock no sea negativo
-        if (nuevoStock < 0) {
+        if (filaSeleccionada == -1) {
             javax.swing.JOptionPane.showMessageDialog(this, 
-                "El stock no puede ser negativo", 
-                "Stock Inválido", 
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+                "Seleccione un producto de la tabla para actualizar su stock", 
+                "No hay selección", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        // Actualizar stock en la tabla
-        modelo.setValueAt(nuevoStock, filaSeleccionada, 2);
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable2.getModel();
+        String codigo = modelo.getValueAt(filaSeleccionada, 0).toString();
+        String nombre = modelo.getValueAt(filaSeleccionada, 1).toString();
+        String stockActual = modelo.getValueAt(filaSeleccionada, 2).toString();
         
-        // Actualizar estado según el nuevo stock
-        String nuevoEstado = nuevoStock > 0 ? "Disponible" : "Agotado";
-        modelo.setValueAt(nuevoEstado, filaSeleccionada, 4);
-        
-        // Mostrar confirmación
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Stock actualizado exitosamente\n\n" +
+        String nuevoStockStr = javax.swing.JOptionPane.showInputDialog(this, 
             "Producto: " + nombre + "\n" +
-            "Stock anterior: " + stockActual + "\n" +
-            "Stock nuevo: " + nuevoStock + "\n" +
-            "Estado: " + nuevoEstado, 
-            "Actualización Exitosa", 
-            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            "Stock actual: " + stockActual + "\n\n" +
+            "Ingrese el nuevo stock (0 o mayor):", 
+            stockActual);
         
-        // Aquí podrías agregar código para actualizar la BD
-        // actualizarBD(codigo, nuevoStock);
+        if (nuevoStockStr == null) return;
         
-    } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Por favor ingrese un número válido para el stock", 
-            "Error de Formato", 
-            javax.swing.JOptionPane.ERROR_MESSAGE);
+        try {
+            int nuevoStock = Integer.parseInt(nuevoStockStr.trim());
+            
+            if (nuevoStock < 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "El stock no puede ser negativo\n" +
+                    "Debe ser 0 o mayor", 
+                    "Stock Inválido", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            modelo.setValueAt(nuevoStock, filaSeleccionada, 2);
+            String nuevoEstado = determinarEstado(nuevoStock);
+            modelo.setValueAt(nuevoEstado, filaSeleccionada, 4);
+            
+           
+            actualizarContadorStockCritico();
+            
+            String mensajeAdicional = "";
+            if (nuevoEstado.equals("Casi Agotado")) {
+                mensajeAdicional = "\n\n⚠️ ADVERTENCIA: Stock bajo (menos de 50 unidades)";
+            } else if (nuevoEstado.equals("Agotado")) {
+                mensajeAdicional = "\n\n❌ ADVERTENCIA: Producto sin stock";
+            }
+            
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Stock actualizado exitosamente\n\n" +
+                "Producto: " + nombre + "\n" +
+                "Stock anterior: " + stockActual + "\n" +
+                "Stock nuevo: " + nuevoStock + "\n" +
+                "Estado: " + nuevoEstado + mensajeAdicional, 
+                "Actualización Exitosa", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Por favor ingrese un número válido para el stock", 
+                "Error de Formato", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -344,10 +621,10 @@ public class pag1 extends javax.swing.JPanel {
                 .addGap(95, 95, 95)
                 .addComponent(jLabel1)
                 .addGap(27, 27, 27)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -386,9 +663,9 @@ public class pag1 extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -437,7 +714,7 @@ public class pag1 extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel11)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -465,7 +742,7 @@ public class pag1 extends javax.swing.JPanel {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -493,34 +770,29 @@ public class pag1 extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(143, 143, 143)))
+                .addContainerGap(64, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addGap(48, 48, 48)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(41, 41, 41))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 76, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addGap(64, 64, 64)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(92, 92, 92))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
