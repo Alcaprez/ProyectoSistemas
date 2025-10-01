@@ -221,7 +221,6 @@ public class VENTAS extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         panelTop = new javax.swing.JPanel();
         panelHeader = new javax.swing.JPanel();
@@ -324,6 +323,11 @@ public class VENTAS extends javax.swing.JFrame {
 
         cmbProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cmbProducto.setPreferredSize(new java.awt.Dimension(160, 32));
+        cmbProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbProductoActionPerformed(evt);
+            }
+        });
         panelFiltros.add(cmbProducto, new java.awt.GridBagConstraints());
 
         btnExportar.setText("EXPORTAR");
@@ -478,6 +482,10 @@ public class VENTAS extends javax.swing.JFrame {
         g.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void cmbProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbProductoActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
