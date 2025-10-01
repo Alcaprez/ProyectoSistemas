@@ -473,7 +473,6 @@ public class PERSONAL extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         panelFiltros.add(btnExportar, gridBagConstraints);
 
-        txtBuscar.setText("jTextField1");
         txtBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBuscarActionPerformed(evt);
