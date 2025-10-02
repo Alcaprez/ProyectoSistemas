@@ -10,13 +10,13 @@ import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import edu.UPAO.proyecto.VentasController;
 import edu.UPAO.proyecto.Modelo.DetalleVenta;
+import edu.UPAO.proyecto.Modelo.Venta;
 import edu.UPAO.proyecto.Modelo.VentaItem;
 
 public class jFrame_GenerarBoleta extends javax.swing.JFrame {
-
     private MenuPrincipal owner;                // referencia a la ventana principal
     private DefaultTableModel modeloBoleta;     // modelo que mostrará la boleta (copia del carrito)
-
+    private jFram_MaquinaDePAgo maquina;
     // Constructor que recibe carrito + totales listos
     public jFrame_GenerarBoleta(MenuPrincipal owner, DefaultTableModel carritoClonado,
             String subtotal, String descuento, String total) {
@@ -363,78 +363,89 @@ public class jFrame_GenerarBoleta extends javax.swing.JFrame {
     }//GEN-LAST:event_tf_idActionPerformed
 
     private void btn_imprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_imprimirActionPerformed
-        if (modeloBoleta == null || modeloBoleta.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "No hay items en la boleta.");
-            return;
-        }
+      // Construir lista de DetalleVenta y calcular total
+    ProductoController pc = new ProductoController();
+    List<Producto> productos = pc.cargarProductos();
 
-        int confirm = JOptionPane.showConfirmDialog(this, "Confirmar venta e imprimir comprobante?", "Confirmar venta", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
+    List<DetalleVenta> detalles = new ArrayList<>();
 
-        // Construir lista de VentaItem y calcular total
-        List<VentaItem> items = new ArrayList<>();
-        double total = 0.0;
-        for (int i = 0; i < modeloBoleta.getRowCount(); i++) {
-            String nombreFila = String.valueOf(modeloBoleta.getValueAt(i, 0));
-            int cantidadVendida = 0;
-            double subtotal = 0.0;
-            try {
-                Object valCant = modeloBoleta.getValueAt(i, 1);
-                if (valCant instanceof Number) {
-                    cantidadVendida = ((Number) valCant).intValue();
-                } else {
-                    cantidadVendida = Integer.parseInt(String.valueOf(valCant));
-                }
-            } catch (Exception ex) {
-                cantidadVendida = 0;
+    for (int i = 0; i < modeloBoleta.getRowCount(); i++) {
+        String nombreFila = String.valueOf(modeloBoleta.getValueAt(i, 0));
+        int cantidadVendida = 0;
+        double subtotal = 0.0;
+        try {
+            Object valCant = modeloBoleta.getValueAt(i, 1); // columna cantidad
+            if (valCant instanceof Number number) {
+                cantidadVendida = number.intValue();
+            } else {
+                cantidadVendida = Integer.parseInt(String.valueOf(valCant));
             }
-            try {
-                Object valSub = modeloBoleta.getValueAt(i, 2);
-                subtotal = Double.parseDouble(String.valueOf(valSub));
-            } catch (Exception ex) {
-                subtotal = 0.0;
-            }
-
-            items.add(new VentaItem(nombreFila, cantidadVendida, subtotal));
-            total += subtotal;
+        } catch (Exception ex) {
+            cantidadVendida = 0;
+        }
+        try {
+            Object valSub = modeloBoleta.getValueAt(i, 2); // columna subtotal
+            subtotal = Double.parseDouble(String.valueOf(valSub));
+        } catch (Exception ex) {
+            subtotal = 0.0;
         }
 
-        // Actualizar inventario
-        ProductoController pc = new ProductoController();
-        List<Producto> productos = pc.cargarProductos();
+        double precioUnitario = (cantidadVendida > 0) ? (subtotal / cantidadVendida) : 0.0;
 
-        for (VentaItem vi : items) {
-            for (Producto p : productos) {
-                if (p.getNombre() != null && p.getNombre().equalsIgnoreCase(vi.getNombre())) {
-                    p.setStock(Math.max(0, p.getStock() - vi.getCantidad()));
-                    p.setVendidos(p.getVendidos() + vi.getCantidad());
-                    break;
-                }
+        // Buscar producto existente por nombre en la lista de productos cargada
+        Producto productoExistente = null;
+        for (Producto p : productos) {
+            if (p.getNombre() != null && p.getNombre().equalsIgnoreCase(nombreFila)) {
+                productoExistente = p;
+                break;
             }
         }
 
-        // Guardar cambios en productos.txt
-        pc.guardarProductos(productos);
-
-        // Registrar venta (memoria + archivo ventas.txt)
-        String fecha = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date());
-        DetalleVenta venta = new DetalleVenta(fecha, items, total);
-        VentasController.registrarVenta(venta);
-
-        // Actualizar UI principal
-        if (owner != null) {
-            owner.cargarProductosEnTabla();
-            // crea este método en MenuPrincipal:
-            // public void vaciarCarrito() { ((DefaultTableModel) miniTabla.getModel()).setRowCount(0); }
-            owner.vaciarCarrito();
-            owner.actualizarTotal();
-            owner.setEnabled(true);
+        Producto productoParaDetalle;
+        if (productoExistente != null) {
+            productoParaDetalle = productoExistente;
+        } else {
+            // Producto temporal (si no se encuentra en productos.txt)
+            productoParaDetalle = new Producto(); // usa constructor vacío y setters
+            productoParaDetalle.setNombre(nombreFila);
+            productoParaDetalle.setPrecioVenta(precioUnitario);
+            productoParaDetalle.setCodigo(""); // o algún valor por defecto
+            productoParaDetalle.setStock(0);
         }
 
-        JOptionPane.showMessageDialog(this, "Venta registrada e inventario actualizado.");
-        this.dispose();
+        DetalleVenta detalle = new DetalleVenta(productoParaDetalle, cantidadVendida, precioUnitario);
+        detalles.add(detalle);
+    }
+
+    // Actualizar inventario (se actualiza sobre la lista 'productos' cargada)
+    for (DetalleVenta d : detalles) {
+        for (Producto p : productos) {
+            if (p.getNombre() != null && p.getNombre().equalsIgnoreCase(d.getProducto().getNombre())) {
+                p.setStock(Math.max(0, p.getStock() - d.getCantidad()));
+                p.setVendidos(p.getVendidos() + d.getCantidad());
+                break;
+            }
+        }
+    }
+
+    // Guardar cambios en productos.txt
+    pc.guardarProductos(productos);
+
+    // Crear objeto Venta con id (simple autogeneración por tamaño actual)
+    int idVenta = VentasController.getVentas().size() + 1; // si prefieres, implementa generarIdVenta() en VentasController
+    int cajeroId = 0;
+    try {
+        cajeroId = Integer.parseInt(tf_id.getText().trim());
+    } catch (Exception e) {
+        // si tf_id no es numérico, dejamos 0 (o ajusta según tu lógica)
+    }
+
+    String metodoPago = rb_efectivo.isSelected() ? "Efectivo"
+                      : rb_digital.isSelected() ? "Digital"
+                      : "Mixto";
+
+    Venta venta = new Venta(idVenta, cajeroId, metodoPago, detalles);
+    VentasController.registrarVenta(venta);
     }//GEN-LAST:event_btn_imprimirActionPerformed
 
     private void rb_mixtoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rb_mixtoActionPerformed
@@ -448,8 +459,16 @@ public class jFrame_GenerarBoleta extends javax.swing.JFrame {
     }//GEN-LAST:event_rb_digitalActionPerformed
 
     private void btn_mostrarMaquinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mostrarMaquinaActionPerformed
-        jFram_MaquinaDePAgo maquina = new jFram_MaquinaDePAgo();
+       if (maquina == null || !maquina.isDisplayable()) {
+        // Si no existe o ya fue cerrada, la creas
+        maquina = new jFram_MaquinaDePAgo();
+        maquina.setLocationRelativeTo(this); // la centras respecto al JFrame actual
         maquina.setVisible(true);
+    } else {
+        // Si ya existe, solo la traes al frente
+        maquina.toFront();
+        maquina.requestFocus();
+    }
     }//GEN-LAST:event_btn_mostrarMaquinaActionPerformed
 
     private void rb_efectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rb_efectivoActionPerformed

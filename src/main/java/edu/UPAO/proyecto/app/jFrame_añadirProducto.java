@@ -12,7 +12,7 @@ public class jFrame_añadirProducto extends javax.swing.JFrame {
      * Creates new form jFrame_añadirProducto
      */
     //CREAMOS LAS VARIABLES DE TIPO GESTORCAJERO Y FRAME PRINCIPAL
-    private proyectosistemasempresariales.vista.MenuPrincipal ventanaPrincipal;
+    private edu.UPAO.proyecto.app.MenuPrincipal ventanaPrincipal;
     DefaultTableModel mt = new DefaultTableModel();
 
     public void setAccessibleContext(AccessibleContext accessibleContext) {
@@ -354,7 +354,7 @@ public class jFrame_añadirProducto extends javax.swing.JFrame {
 
         mt.setRowCount(0); // limpiar tabla antes de cargar
         for (Producto p : productos) {
-            mt.addRow(new Object[]{p.getNombre(), p.getPrecio(), p.getStock(), p.getCodigo()});
+            mt.addRow(new Object[]{p.getNombre(), p.getPrecioVenta(), p.getStock(), p.getCodigo()});
         }
     }
 
@@ -400,7 +400,7 @@ public class jFrame_añadirProducto extends javax.swing.JFrame {
 
 
 
-    public void setVentanaPrincipal(proyectosistemasempresariales.vista.MenuPrincipal ventana) {
+    public void setVentanaPrincipal(edu.UPAO.proyecto.app.MenuPrincipal ventana) {
         this.ventanaPrincipal = ventana;
     }
 

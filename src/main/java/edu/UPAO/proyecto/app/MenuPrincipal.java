@@ -45,13 +45,13 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     public void cargarProductosEnTabla() {
         ProductoController pc = new ProductoController();
-        java.util.List<proyectosistemasempresariales.modelo.Producto> productos = pc.cargarProductos();
+        java.util.List<edu.UPAO.proyecto.Modelo.Producto> productos = pc.cargarProductos();
 
         javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaProductos.getModel();
         modelo.setRowCount(0);
 
-        for (proyectosistemasempresariales.modelo.Producto p : productos) {
-            modelo.addRow(new Object[]{p.getNombre(), p.getPrecio(), p.getStock(), p.getCodigo(), p.getVendidos()});
+        for (edu.UPAO.proyecto.Modelo.Producto p : productos) {
+            modelo.addRow(new Object[]{p.getNombre(), p.getPrecioVenta(), p.getStock(), p.getCodigo(), p.getVendidos()});
         }
     }
 
@@ -82,8 +82,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         btn_agregar = new javax.swing.JButton();
         spCantidad = new javax.swing.JSpinner();
         jButton11 = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tablaProductos = new proyectosistemasempresariales.vista.Tabla();
         panel = new javax.swing.JPanel();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
@@ -93,8 +91,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         txtCupon = new javax.swing.JTextField();
         rb_observacion = new javax.swing.JRadioButton();
         rb_cupon = new javax.swing.JRadioButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        miniTabla = new proyectosistemasempresariales.vista.Tabla();
         lblTotal = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         sp_item = new javax.swing.JSpinner();
@@ -145,7 +141,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         tb_reportes.setBackground(new java.awt.Color(118, 158, 139));
         tb_reportes.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        tb_reportes.setForeground(new java.awt.Color(0, 0, 0));
         tb_reportes.setText("REPORTES");
         tb_reportes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,7 +150,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         tb_entrada.setBackground(new java.awt.Color(118, 158, 139));
         tb_entrada.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        tb_entrada.setForeground(new java.awt.Color(0, 0, 0));
         tb_entrada.setText("R. ENT / SAL");
         tb_entrada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,7 +159,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         tb_ventas.setBackground(new java.awt.Color(118, 158, 139));
         tb_ventas.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        tb_ventas.setForeground(new java.awt.Color(0, 0, 0));
         tb_ventas.setText("VENTAS");
         tb_ventas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -175,7 +168,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         tb_cuenta.setBackground(new java.awt.Color(118, 158, 139));
         tb_cuenta.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        tb_cuenta.setForeground(new java.awt.Color(0, 0, 0));
         tb_cuenta.setText("CUENTA");
         tb_cuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,29 +239,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
         jPanel8.add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(1270, 710, 200, 50));
 
-        tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Nombre", "Precio", "Stock", "Codigo"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(tablaProductos);
-
-        jPanel8.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 21, 1450, 670));
-
         panel.setBackground(new java.awt.Color(255, 255, 255));
 
         jButton6.setBackground(new java.awt.Color(110, 149, 106));
@@ -320,29 +289,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
 
-        miniTabla.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nombre", "Cantidad", "SubTotal"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(miniTabla);
-        if (miniTabla.getColumnModel().getColumnCount() > 0) {
-            miniTabla.getColumnModel().getColumn(0).setPreferredWidth(200);
-        }
-
         lblTotal.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        lblTotal.setForeground(new java.awt.Color(0, 0, 0));
         lblTotal.setText("TOTAL:");
 
         btn_actualizarItem.setText("Actualizar");
@@ -423,7 +370,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
@@ -443,9 +389,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
             .addGroup(panelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(444, 444, 444)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_subtotal)
@@ -456,10 +400,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCupon, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rb_cupon)
-                    .addComponent(btn_validar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_validar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtCupon, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rb_cupon)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19)
@@ -472,7 +417,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("PRODUCTO:");
 
         txtBuscarCodigo.addActionListener(new java.awt.event.ActionListener() {
@@ -559,7 +503,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 772, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         setJMenuBar(jMenuBar1);
@@ -599,7 +543,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private void agregarAlCarrito(Producto p, int cantidad) {
         DefaultTableModel modeloCarrito = (DefaultTableModel) miniTabla.getModel();
 
-        double subtotal = p.getPrecio() * cantidad;
+        double subtotal = p.getPrecioVenta()* cantidad;
 
         Object[] fila = {
             p.getNombre(),
@@ -631,7 +575,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_tb_reportesActionPerformed
 
     private void tb_entradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tb_entradaActionPerformed
-        jFrame_Asistncias jFrame_Asistncias1 = new jFrame_Asistncias();
+        jFrame_Asistncias jFrame_Asistncias1;
+        jFrame_Asistncias1 = new jFrame_Asistncias();
         jFrame_Asistncias1.setVisible(true);
     }//GEN-LAST:event_tb_entradaActionPerformed
 
@@ -717,7 +662,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
                 int cantidad = 1; // cantidad por defecto al escanear
                 if (p.getStock() > 0) {
-                    double subtotal = p.getPrecio() * cantidad;
+                    double subtotal = p.getPrecioVenta()* cantidad;
 
                     DefaultTableModel modeloCarrito = (DefaultTableModel) miniTabla.getModel();
                     modeloCarrito.addRow(new Object[]{p.getNombre(), cantidad, subtotal});
@@ -841,7 +786,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         for (Producto p : productos) {
-            modelo.addRow(new Object[]{p.getNombre(), p.getPrecio(), p.getStock(), p.getVendidos()});
+            modelo.addRow(new Object[]{p.getNombre(), p.getPrecioVenta(), p.getStock(), p.getVendidos()});
         }
     }//GEN-LAST:event_jButton12ActionPerformed
 
@@ -862,7 +807,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         for (Producto p : productos) {
             if (p.getCodigo().equalsIgnoreCase(textoBusqueda)
                     || p.getNombre().equalsIgnoreCase(textoBusqueda)) {
-                modelo.addRow(new Object[]{p.getNombre(), p.getPrecio(), p.getStock(), p.getCodigo(), p.getVendidos()});
+                modelo.addRow(new Object[]{p.getNombre(), p.getPrecioVenta(), p.getStock(), p.getCodigo(), p.getVendidos()});
                 encontrado = true;
             }
         }
@@ -1023,19 +968,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JLabel lbl_descuento;
     private javax.swing.JLabel lbl_subtotal;
-    private org.netbeans.modules.form.InvalidComponent miniTabla;
     private javax.swing.JPanel panel;
     private javax.swing.JPanel panelFormulario;
     private javax.swing.JRadioButton rb_cupon;
     private javax.swing.JRadioButton rb_observacion;
     private javax.swing.JSpinner spCantidad;
     private javax.swing.JSpinner sp_item;
-    private static org.netbeans.modules.form.InvalidComponent tablaProductos;
     private javax.swing.JToggleButton tb_cuenta;
     private javax.swing.JToggleButton tb_entrada;
     private javax.swing.JToggleButton tb_reportes;

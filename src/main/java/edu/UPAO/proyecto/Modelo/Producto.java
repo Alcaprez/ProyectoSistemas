@@ -17,9 +17,24 @@ public class Producto {
     private String fechaVencimiento;// Fecha de vencimiento (si aplica)
 
     // Constructores
+    
     public Producto() {
     }
 
+    public Producto(String nombre, double precioVenta, int stock, String codigo) {
+        this.nombre = nombre;
+        this.precioVenta = precioVenta;
+        this.stock = stock;
+        this.codigo = codigo;
+        
+        // Valores por defecto
+        this.idProducto = 0;
+        this.categoria = "Sin categoría";
+        this.stockMinimo = 0;
+        this.vendidos = 0;
+        this.fechaIngreso = "";
+        this.fechaVencimiento = "";
+    }
     public Producto(int idProducto, String codigo, String nombre, String categoria,double precioVenta,
             int stock, int stockMinimo, int vendidos,
             String fechaIngreso, String fechaVencimiento) {
