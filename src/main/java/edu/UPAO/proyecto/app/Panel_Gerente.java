@@ -14,13 +14,104 @@ public class Panel_Gerente extends javax.swing.JFrame {
 
     public Panel_Gerente() {
         initComponents();  
-     setResizable(true);
-    setMinimumSize(new java.awt.Dimension(1000, 650));  // opcional
-    pack();                      // calcula tamaños según layouts
-    setLocationRelativeTo(null); // centrar
-    // opcional: arrancar maximizada
-    setExtendedState(getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+      
+getContentPane().setLayout(null);
+
+// jPanel1 debe crecer siempre con la ventana
+getContentPane().addComponentListener(new java.awt.event.ComponentAdapter() {
+    @Override public void componentResized(java.awt.event.ComponentEvent e) {
+        layoutRootAndChildren();
+    }
+});
+        setExtendedState(getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+
+    // aseguramos AbsoluteLayout en los paneles que vamos a posicionar
+    panelCenter.setLayout(null);
+    jPanel2.setLayout(null);
+    jPanel3.setLayout(null);
+
+    // recalcular cuando cambie el tamaño
+    panelCenter.addComponentListener(new java.awt.event.ComponentAdapter() {
+        @Override public void componentResized(java.awt.event.ComponentEvent e) {
+            layoutFullScreen();
+        }
+    });
+
+    // primera vez
+    layoutFullScreen();
    
+}
+private void layoutFullScreen() {
+    int W = panelCenter.getWidth();
+    int H = panelCenter.getHeight();
+    if (W <= 0 || H <= 0) return;
+
+    int gap = 16;     // margen general
+    int hNaranja = 72; // alto barra naranja
+    int hRojo    = 44; // alto franja roja
+
+    // --- Barras superiores ---
+    jPanel2.setBounds(gap, gap, W - 2*gap, hNaranja);                 // barra naranja
+    jPanel3.setBounds(gap, gap + hNaranja, W - 2*gap, hRojo);         // franja roja
+
+    // --- Zona de contenido (donde van las 6 tarjetas) ---
+    int top = gap + hNaranja + hRojo + gap;
+    int contentW = W - 2*gap;
+    int contentH = H - top - gap;
+
+    // Para que el fondo gris se vea como en tu mockup, si tienes un panel de fondo
+    // reusamos jPanel1 mismo; si tienes otro panel para fondo, dale bounds aquí:
+    // jPanelContenido.setBounds(gap, top, contentW, contentH);
+
+    // ---- GRID de tarjetas 3×2 (se adapta a ancho) ----
+    // cambia columnas según ancho
+    int cols = contentW >= 1100 ? 3 : (contentW >= 760 ? 2 : 1);
+    int cardW = (contentW - (cols + 1) * gap) / cols;
+    int cardH = Math.min(220, (int)(cardW * 0.75)); // relación ~4:3
+
+    javax.swing.JButton[] cards = new javax.swing.JButton[]{
+        BotonLocales,       // R. INVENTARIO
+        jButton4,       // R. VENTAS
+        BotonEmpleado,  // EMPLEADOS
+        BotonVentas,       // PROMOCIONES
+        botonPromociones,       // LOCALES
+        jButton6        // CUENTA
+    };
+
+    for (int i = 0; i < cards.length; i++) {
+        int col = i % cols;
+        int row = i / cols;
+
+        int x = gap + col * (cardW + gap);
+        int y = top + gap + row * (cardH + gap);
+
+        cards[i].setBounds(x, y, cardW, cardH);
+    }
+
+   if (btnCerrarSesion != null) {
+    int bw = 140;  // ancho del botón
+    int bh = 40;   // alto del botón
+    int margen = 20; // margen derecho
+
+    // Lo colocamos pegado al lado derecho de la barra naranja
+    btnCerrarSesion.setBounds(
+        jPanel2.getWidth() - bw - margen, // X (derecha)
+        (jPanel2.getHeight() - bh) / 2,   // Y (centrado vertical)
+        bw, bh
+    );
+}
+}
+
+private void layoutRootAndChildren() {
+    // 1) Estirar jPanel1 al tamaño del contentPane
+    int W = getContentPane().getWidth();
+    int H = getContentPane().getHeight();
+    if (W <= 0 || H <= 0) return;
+
+    panelCenter.setBounds(0, 0, W, H);
+
+    // 2) Ahora sí, reposiciona barras y tarjetas según jPanel1
+    layoutFullScreen();   // este es el método que ya te pasé antes
 }
 
   
@@ -28,242 +119,141 @@ public class Panel_Gerente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jTextField2 = new javax.swing.JTextField();
+        panelTop = new javax.swing.JPanel();
+        panelHeader = new javax.swing.JPanel();
+        logoLabel = new javax.swing.JLabel();
+        btnSalir = new javax.swing.JButton();
+        lblFrase = new javax.swing.JLabel();
+        panelTitle = new javax.swing.JPanel();
+        lblTitulo = new javax.swing.JLabel();
+        panelCenter = new javax.swing.JPanel();
+        palenTiles = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        BotonEmpleado = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelTop.setLayout(new java.awt.BorderLayout());
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 0));
-        jPanel2.setPreferredSize(new java.awt.Dimension(850, 64));
+        panelHeader.setBackground(new java.awt.Color(255, 153, 0));
+        panelHeader.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 16, 0, 16));
+        panelHeader.setPreferredSize(new java.awt.Dimension(780, 70));
+        panelHeader.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\Logo_kuyay-convertido-a-pequeño-removebg-preview.png")); // NOI18N
-        jLabel1.setText("jLabel1");
+        logoLabel.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\Logo_kuyay-convertido-a-pequeño-removebg-preview.png")); // NOI18N
+        panelHeader.add(logoLabel, java.awt.BorderLayout.WEST);
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setFont(new java.awt.Font("Leelawadee UI", 1, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setText("CERRAR SESIÓN");
-        jButton2.setBorder(null);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnSalir.setBackground(new java.awt.Color(255, 255, 255));
+        btnSalir.setFont(new java.awt.Font("Leelawadee UI", 1, 14)); // NOI18N
+        btnSalir.setForeground(new java.awt.Color(0, 0, 0));
+        btnSalir.setText("CERRAR SESIÓN");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnSalirActionPerformed(evt);
             }
         });
+        panelHeader.add(btnSalir, java.awt.BorderLayout.EAST);
 
-        jLabel2.setFont(new java.awt.Font("Harlow Solid Italic", 0, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(193, 28, 28));
-        jLabel2.setText("Todo lo que necesitas al alcance");
+        lblFrase.setFont(new java.awt.Font("Harlow Solid Italic", 0, 12)); // NOI18N
+        lblFrase.setForeground(new java.awt.Color(193, 28, 28));
+        lblFrase.setText("Todo lo que necesitas al alcance");
+        panelHeader.add(lblFrase, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 398, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel1)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel2))
-        );
+        panelTop.add(panelHeader, java.awt.BorderLayout.NORTH);
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 70));
+        panelTitle.setBackground(new java.awt.Color(153, 0, 0));
+        panelTitle.setPreferredSize(new java.awt.Dimension(780, 40));
+        panelTitle.setLayout(new java.awt.BorderLayout());
 
-        jPanel3.setBackground(new java.awt.Color(153, 0, 0));
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(255, 255, 255));
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo.setText("BIENVENIDO GERENTE");
+        panelTitle.add(lblTitulo, java.awt.BorderLayout.CENTER);
 
-        jTextField2.setBackground(new java.awt.Color(153, 0, 0));
-        jTextField2.setFont(new java.awt.Font("Rockwell", 3, 24)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField2.setText("BIENVENIDO GERENTE");
-        jTextField2.setBorder(null);
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
+        panelTop.add(panelTitle, java.awt.BorderLayout.PAGE_END);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(278, Short.MAX_VALUE)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(240, 240, 240))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(0, 3, Short.MAX_VALUE)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        getContentPane().add(panelTop, java.awt.BorderLayout.NORTH);
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 820, 40));
+        panelCenter.setBackground(new java.awt.Color(219, 236, 232));
+        panelCenter.setLayout(new java.awt.GridBagLayout());
 
-        jButton3.setBackground(new java.awt.Color(0, 153, 102));
-        jButton3.setFont(new java.awt.Font("Leelawadee UI", 1, 18)); // NOI18N
+        palenTiles.setOpaque(false);
+        palenTiles.setLayout(new java.awt.GridLayout(2, 2, 48, 48));
+
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\locales.jpg")); // NOI18N
-        jButton3.setText("LOCALES");
+        jButton3.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Documentos\\reporte ventas.png")); // NOI18N
+        jButton3.setText("R. VENTAS");
         jButton3.setContentAreaFilled(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 320, 180, 180));
+        palenTiles.add(jButton3);
 
-        jButton4.setBackground(new java.awt.Color(0, 153, 102));
-        jButton4.setFont(new java.awt.Font("Leelawadee UI", 1, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\reporte inventario.jpg")); // NOI18N
-        jButton4.setText("R. INVENTARIO");
-        jButton4.setContentAreaFilled(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 180, 180));
-
-        jButton5.setBackground(new java.awt.Color(0, 153, 102));
-        jButton5.setFont(new java.awt.Font("Leelawadee UI", 1, 18)); // NOI18N
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\reporte ventas.png")); // NOI18N
-        jButton5.setText("R. VENTAS");
+        jButton5.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Documentos\\personal.jpg")); // NOI18N
+        jButton5.setText("EMPLEADOS");
         jButton5.setContentAreaFilled(false);
         jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, 180, 180));
+        palenTiles.add(jButton5);
 
-        BotonEmpleado.setBackground(new java.awt.Color(76, 182, 80));
-        BotonEmpleado.setFont(new java.awt.Font("Leelawadee UI", 1, 18)); // NOI18N
-        BotonEmpleado.setForeground(new java.awt.Color(255, 255, 255));
-        BotonEmpleado.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\personal.jpg")); // NOI18N
-        BotonEmpleado.setText("EMPLEADOS");
-        BotonEmpleado.setContentAreaFilled(false);
-        BotonEmpleado.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BotonEmpleado.setPressedIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\personal.jpg")); // NOI18N
-        BotonEmpleado.setRolloverIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\personal.jpg")); // NOI18N
-        BotonEmpleado.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        BotonEmpleado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonEmpleadoActionPerformed(evt);
-            }
-        });
-        jPanel1.add(BotonEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 130, 180, 180));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Documentos\\promociones.png")); // NOI18N
+        jButton2.setText("PROMOCIONES");
+        jButton2.setContentAreaFilled(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setPreferredSize(new java.awt.Dimension(150, 150));
+        jButton2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        palenTiles.add(jButton2);
 
-        jButton7.setBackground(new java.awt.Color(0, 153, 102));
-        jButton7.setFont(new java.awt.Font("Leelawadee UI", 1, 18)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(255, 255, 255));
-        jButton7.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\promociones.png")); // NOI18N
-        jButton7.setText("PROMOCIONES");
-        jButton7.setContentAreaFilled(false);
-        jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton7.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 320, 180, 180));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Documentos\\locales.jpg")); // NOI18N
+        jButton4.setText("LOCALES");
+        jButton4.setContentAreaFilled(false);
+        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton4.setPreferredSize(new java.awt.Dimension(150, 150));
+        jButton4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        palenTiles.add(jButton4);
 
-        jButton6.setBackground(new java.awt.Color(0, 153, 102));
-        jButton6.setFont(new java.awt.Font("Leelawadee UI", 1, 18)); // NOI18N
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
-        jButton6.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Imágenes\\USUARIO.png")); // NOI18N
+        jButton6.setIcon(new javax.swing.ImageIcon("C:\\Users\\WIN-10\\OneDrive\\Documentos\\USUARIO.png")); // NOI18N
         jButton6.setText("CUENTA");
         jButton6.setContentAreaFilled(false);
         jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton6.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 320, 190, 180));
+        palenTiles.add(jButton6);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 819, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        panelCenter.add(palenTiles, new java.awt.GridBagConstraints());
+
+        getContentPane().add(panelCenter, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        Panel_Gerente g = new Panel_Gerente(); // cambia por el nombre de tu JFrame de Gerente
+        g.setVisible(true);
+        g.setLocationRelativeTo(null); // centrar la ventana en la pantalla
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void BotonEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEmpleadoActionPerformed
-        PERSONAL mPERSONAL = new PERSONAL();
-        mPERSONAL.setVisible(true);
-        
-
-
-    }//GEN-LAST:event_BotonEmpleadoActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+        // Cerrar esta ventana (PERSONAL)
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
@@ -305,18 +295,19 @@ public class Panel_Gerente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BotonEmpleado;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel lblFrase;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel logoLabel;
+    private javax.swing.JPanel palenTiles;
+    private javax.swing.JPanel panelCenter;
+    private javax.swing.JPanel panelHeader;
+    private javax.swing.JPanel panelTitle;
+    private javax.swing.JPanel panelTop;
     // End of variables declaration//GEN-END:variables
 }

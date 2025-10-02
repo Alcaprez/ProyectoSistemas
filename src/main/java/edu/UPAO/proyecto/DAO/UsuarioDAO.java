@@ -9,9 +9,9 @@ public class UsuarioDAO {
 
     static {
         // Datos iniciales simulando usuarios registrados
-        usuarios.add(new Usuario("1234", 12345678, true, 1, "Juan Pérez", "CAJERO", "cajero1"));
-        usuarios.add(new Usuario("admin", 87654321, true, 2, "María López", "ADMIN", "admin1"));
-        usuarios.add(new Usuario("0000", 11112222, false, 3, "Carlos Ruiz", "CAJERO", "cajero2")); // este está desactivado
+        usuarios.add(new Usuario("1234", 12345678, true, "666", "Juan Pérez", "CAJERO", "cajero1"));
+        usuarios.add(new Usuario("admin", 87654321, true,"777" , "María López", "ADMIN", "admin1"));
+        usuarios.add(new Usuario("0000", 11112222, false,"888" , "Carlos Ruiz", "CAJERO", "cajero2")); // este está desactivado
     }
 
     // Listar todos los usuarios
@@ -20,12 +20,15 @@ public class UsuarioDAO {
     }
 
     // Buscar usuario por ID
-    public Usuario buscarPorId(int id) {
-        return usuarios.stream()
-                .filter(u -> u.getIdUsuario() == id)
-                .findFirst()
-                .orElse(null);
-    }
+    public Usuario buscarPorId(String id) {
+    if (id == null) return null;
+    String needle = id.trim(); // o .toUpperCase() si quieres ignorar mayúsculas/minúsculas
+    return usuarios.stream()
+            .filter(u -> needle.equals(u.getId()))               // o equalsIgnoreCase
+            .findFirst()
+            .orElse(null);
+}
+
 
     // Buscar usuario por username
     public Usuario buscarPorUsuario(String username) {
@@ -51,12 +54,13 @@ public class UsuarioDAO {
     }
 
     // Eliminar usuario por ID
-    public void eliminar(int id) {
-        usuarios.removeIf(u -> u.getIdUsuario() == id);
+    public void eliminar(String id) {
+       if (id == null) return;
+    usuarios.removeIf(u -> id.equals(u.getId()));
     }
 
     // Activar o desactivar usuario
-    public void cambiarEstado(int id, boolean nuevoEstado) {
+    public void cambiarEstado(String id, boolean nuevoEstado) {
         Usuario u = buscarPorId(id);
         if (u != null) {
             u.setEstado(nuevoEstado);

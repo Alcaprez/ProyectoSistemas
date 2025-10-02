@@ -12,9 +12,20 @@ public class VentaDAO {
 
     // Registrar nueva venta
     public void registrarVenta(int cajeroId, List<DetalleVenta> detalles, String metodoPago) {
+
         Venta venta = new Venta(nextId++, cajeroId, metodoPago, detalles);
         ventas.add(venta);
     }
+
+    double total = detalles.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
+    String fechaActual = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+    Venta venta = new Venta(cajeroId, detalles, fechaActual, nextId++, metodoPago, total);
+    ventas.add(venta);
+
+    System.out.println("✅ Venta registrada con ID: " + venta.getIdVenta() + " | Total: S/ " + venta.getTotal());
+}
+
 
     // Listar todas las ventas
     public List<Venta> listar() {
@@ -29,7 +40,7 @@ public class VentaDAO {
             }
         }
         return null;
-    }
+    }}
 
     // Eliminar venta
     public boolean eliminarVenta(int idVenta) {

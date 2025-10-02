@@ -355,6 +355,7 @@ public class PERSONAL extends javax.swing.JFrame {
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(255, 255, 255));
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitulo.setText("GESTIÓN DE EMPLEADOS");
         panelTitle.add(lblTitulo, java.awt.BorderLayout.CENTER);
 
